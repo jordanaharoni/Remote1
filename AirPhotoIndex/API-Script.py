@@ -16,7 +16,7 @@ else:
     print outfn +' does not already exist!' #This will be written if the file does not exist
 outFile=open(outfn, 'w') #Create a new output File (.html)
 
-#READ CSV FILE
+#READ TSV FILE
 allcontent=inFile.readlines() #Read csv and group contents line by line
 content=allcontent[3:] #Remove the first line from the content as it does not provide useful information
 
