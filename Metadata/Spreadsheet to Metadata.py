@@ -1,5 +1,5 @@
 import os
-inFile=open(input('Input location of the master spreadsheet (.tsv) and hit enter: '))
+inFile=open('Master Spreadsheet July 8.tsv')
 
 #READ CSV FILE AND GATHER UNIQUE YEARS
 allcontent=inFile.readlines() #Read csv and group contents line by line
@@ -9,23 +9,15 @@ years=[] #creates an empty array where all of the years from the spreadsheet wil
 for line in content:
     item=line.split('\t') #split the items in each line by the tabs (\t) between them
     year=item[17] #year value is in column 20 (or 19 if we begin count at 0)
-    if year[0]=='[': #remove square brackets for creating an array of years (no special characters desired)
-        year=year[1:-1]
-    elif len(year)==5:
-        year=year[:-1] #remove special characters ex. ? by ensuring the length is not more than 4 digits
     years.append(year)
 years=sorted(set(years))
+print years
     #DEFINE FILE NAMES FROM THE SPREADSHEET AND ADD THEM TO AN ARRAY
 outFiles=[] #creates an empty array where the name of all files will be stored
 for line in content:
     item=line.split('\t') #split the items in each line by the tabs (\t) between them
     IDlocation=item[3] #location of set is in column 4 (or 3 if we begin count at 0)
     year=item[17]
-    year=year.translate(None,"?") #remove any ? value from the years
-    if year[0]=='[': #remove square brackets for creating an array of years (no special characters desired)
-        year=year[1:-1]
-    elif len(year)==5:
-        year=year[:-1]
     outfn='Metadata '+str(IDlocation)+' Airphotos '+str(year)+'.txt' #structure of filename
     outFiles.append(outfn) #add structure of out Files to an array, which we will pull from later
 outFiles=sorted(set(outFiles))
@@ -37,8 +29,8 @@ if os.path.exists(mName): #Check if file exists
 mMaster=open(mName, 'wb') #Create a new output File (.txt)
 home=os.getcwd()
     #CREATING HEADERS FOR NEW FILES
-mtitle='Identifier\tTitle\tSubtitle\tCorporate Name/Author\tPersonal Name/Author\tType of resource\tGenre\tDate created\tPublisher\tPlace of publication\tDate other\tLanguage\tForm\tExtent/Scale\tPhysical description note\tNote\tSubject(geographic)\tSubject(geographic)\tSubject(geographic)\tContinent\tCountry\tProvince/state\tRegion\tCounty\tCity\tCity section\tArea\tCoordinates\r\n'
-sTitle='identifier\ttitle\tsubtitle\tcorporateauthor\tpersonalauthor\ttypeofresource\tgenreloc\tdateCreated\tpublisher\tpublicationplace\tdateOther\tlanguage\tphysicalform\tphysicalextent\tphysicalnote\tnote\tsubjectgeographic\tsubjectgeographic\tsubjectgeographic\tcontinent\tcountry\tprovince\tregion\tcounty\tcity\tcitySection\tarea\tcoordinates\r\n'
+mtitle='Identifier\tTitle\tSubtitle\tCorporate Name/Author\tPersonal Name/Author\tType of resource\tGenre\tDate\tSearchable Date\tPublisher\tPlace of publication\tLanguage\tForm\tExtent/Scale\tPhysical description note\tNote\tSubject(geographic)\tSubject(geographic)\tSubject(geographic)\tContinent\tCountry\tProvince/state\tRegion\tCounty\tCity\tCity section\tArea\tCoordinates\r\n'
+sTitle='identifier\ttitle\tsubtitle\tcorporateauthor\tpersonalauthor\ttypeofresource\tgenreloc\tdateCreated\tsearchDate\tpublisher\tpublicationplace\tlanguage\tphysicalform\tphysicalextent\tphysicalnote\tnote\tsubjectgeographic\tsubjectgeographic\tsubjectgeographic\tcontinent\tcountry\tprovince\tregion\tcounty\tcity\tcitySection\tarea\tcoordinates\r\n'
 mMaster.write(mtitle) #Writes title line into mMaster file
 mMaster.write(sTitle) #Write sub title line into mMaster file
 
@@ -69,16 +61,20 @@ for y in xrange (0, len(outFiles)): #iterates through each value in the array ou
             if interest.startswith('"') and interest.endswith('"'): #if the item is surrounded by quotations they are removed in the following line
                 item[z]=interest[1:-1]
         ryear=item[17]
-        if ryear[0]=='[':
-            ryear=ryear[1:-1]
-        ryear=ryear.translate(None,"?")
         IDlocation=item[3]
+        IDlocation=IDlocation.translate(None,"?") #remove any ? value from the years
+        if IDlocation[0]=='[': #remove square brackets for creating an array of years (no special characters desired)
+            IDlocation=IDlocation[1:-1]
+        elif len(IDlocation)==5:
+            IDlocation=IDlocation[:-1]
         fileName=outFiles[y]
         #WRITE RANGE YEAR SETS (EX. 1954-1955)
-        print ryear
         if IDlocation==fileName[9:-24] and ryear==fileName[-13:-4]: #checks if file has year range, and the location name match
             year=item[4]
-            dispyear=year[:4] #only first four values of the year
+            sYear=year #only first four values of the year
+            sYear=year.translate(None,"?") #remove any ? value from the years
+            if sYear[0]=='[': #remove square brackets for creating an array of years (no special characters desired)
+                sYear=sYear[1:-1]
             flightline=item[5]
             photo=item[6]
             scale=item[7]
@@ -101,31 +97,43 @@ for y in xrange (0, len(outFiles)): #iterates through each value in the array ou
             county=item[27]
             city=item[28]
             citysection=item[29]
-            area=item[30]
             if flightline!='': #if the field is not empty ''
                 eflightline='Flightline '+str(flightline) #formatting for title
+                flightline='_'+str(flightline)
             else:
                 eflightline=''
             if photo!='':
                 ephoto='Photo '+str(photo) #formatting for title
             else:
                 ephoto=''
-            if flightline!='' and photo!='':
-                join='-' #formatting for title and identifier
+            if flightline!='' or photo!='':
+                sq1=' : ['
+                sq2=']'
+                join='-'
             else:
+                sq1=''
+                sq2=''
                 join=''
-            identifier='AirPhotos_'+str(IDlocation)+'_'+str(dispyear)+'_'+str(flightline)+str(join)+str(photo)
-            if item[0]!="": #format for if the air photo has a title on it (aka the very first column has content)
-                title=str(item[0])+' : ['+str(eflightline)+str(join)+str(ephoto)+']'
+            if flightline!='' and photo!='':
+                Tjoin='-'
             else:
-                title='['+str(item[1])+', '+str(dispyear)+'] : ['+str(eflightline)+str(join)+str(ephoto)+']'
-            entry=str(identifier)+'\t'+str(title)+'\t\t'+str(author1)+'\t'+str(author2)+'\tcartographic\tAerial photographs\t'+str(year)+'\t'+str(publisher)+'\t'+str(publisherloc)+'\t'+str(dateother)+'\teng\tremote-sensing image\t'+str(scale)+'\t'+str(physicalDescription)+'\t'+str(note)+'\t'+str(subject1)+'\t'+str(subject2)+'\t'+str(subject3)+'\t'+str(continent)+'\t'+str(country)+'\t'+str(province)+'\t'+str(region)+'\t'+str(county)+'\t'+str(city)+'\t'+str(citysection)+'\t'+str(area)+'\tlatitude '+str(latitude)+' ; longitude '+str(longitude)+'\r\n'
+                Tjoin=''
+            identifier='AirPhotos_'+str(IDlocation)+'_'+str(dateother)+str(flightline)+str(join)+str(photo)
+            flightline=item[5]
+            if item[0]!="": #format for if the air photo has a title on it (aka the very first column has content)
+                title=str(item[0])+str(sq1)+str(eflightline)+str(Tjoin)+str(ephoto)+str(sq2)
+            else:
+                title='['+str(item[1])+', '+str(dateother)+']'+str(sq1)+str(eflightline)+str(Tjoin)+str(ephoto)+str(sq2)
+            entry=str(identifier)+'\t'+str(title)+'\t\t'+str(author1)+'\t'+str(author2)+'\tcartographic\tAerial photographs\t'+str(year)+'\t'+str(sYear)+'\t'+str(publisher)+'\t'+str(publisherloc)+'\teng\tremote-sensing image\t'+str(scale)+'\t'+str(physicalDescription)+'\t'+str(note)+'\t'+str(subject1)+'\t'+str(subject2)+'\t'+str(subject3)+'\t'+str(continent)+'\t'+str(country)+'\t'+str(province)+'\t'+str(region)+'\t'+str(county)+'\t'+str(city)+'\t'+str(citysection)+'\t'+str(area)+'\tlatitude '+str(latitude)+' ; longitude '+str(longitude)+'\r\n'
             outFile.write(entry) #write entry variable to the respective file in the new folder/directory
             mMaster.write(entry) #write entry variable to the master metatdata sheet
         #WRITE SINGLE YEAR SETS (EX. 1955)
         elif ryear==fileName[-8:-4] and IDlocation==fileName[9:-19]: #checks if file year and the location name match (ex. Hamilton 1920)
             year=item[4]
-            dispyear=year[:4] #only first four values of the year
+            sYear=year #only first four values of the year
+            sYear=year.translate(None,"?") #remove any ? value from the years
+            if sYear[0]=='[': #remove square brackets for creating an array of years (no special characters desired)
+                sYear=sYear[1:-1]
             flightline=item[5]
             photo=item[6]
             scale=item[7]
@@ -151,22 +159,32 @@ for y in xrange (0, len(outFiles)): #iterates through each value in the array ou
             area=item[30]
             if flightline!='': #if the field is not empty ''
                 eflightline='Flightline '+str(flightline) #formatting for title
+                flightline='_'+str(flightline)
             else:
                 eflightline=''
             if photo!='':
                 ephoto='Photo '+str(photo) #formatting for title
             else:
                 ephoto=''
-            if flightline!='' and photo!='':
-                join='-' #formatting for title and identifier
+            if flightline!='' or photo!='':
+                sq1=' : ['
+                sq2=']'
+                join='-'
             else:
+                sq1=''
+                sq2=''
                 join=''
-            identifier='AirPhotos_'+str(IDlocation)+'_'+str(dispyear)+'_'+str(flightline)+str(join)+str(photo)
-            if item[0]!="": #format for if the air photo has a title on it (aka the very first column has content)
-                title=str(item[0])+' : ['+str(eflightline)+str(join)+str(ephoto)+']'
+            if flightline!='' and photo!='':
+                Tjoin='-'
             else:
-                title='['+str(item[1])+', '+str(dispyear)+'] : ['+str(eflightline)+str(join)+str(ephoto)+']'
-            entry=str(identifier)+'\t'+str(title)+'\t\t'+str(author1)+'\t'+str(author2)+'\tcartographic\tAerial photographs\t'+str(year)+'\t'+str(publisher)+'\t'+str(publisherloc)+'\t'+str(dateother)+'\teng\tremote-sensing image\t'+str(scale)+'\t'+str(physicalDescription)+'\t'+str(note)+'\t'+str(subject1)+'\t'+str(subject2)+'\t'+str(subject3)+'\t'+str(continent)+'\t'+str(country)+'\t'+str(province)+'\t'+str(region)+'\t'+str(county)+'\t'+str(city)+'\t'+str(citysection)+'\t'+str(area)+'\tlatitude '+str(latitude)+' ; longitude '+str(longitude)+'\r\n'
+                Tjoin=''
+            identifier='AirPhotos_'+str(IDlocation)+'_'+str(dateother)+str(flightline)+str(join)+str(photo)
+            flightline=item[5]
+            if item[0]!="": #format for if the air photo has a title on it (aka the very first column has content)
+                title=str(item[0])+str(sq1)+str(eflightline)+str(Tjoin)+str(ephoto)+str(sq2)
+            else:
+                title='['+str(item[1])+', '+str(dateother)+']'+str(sq1)+str(eflightline)+str(Tjoin)+str(ephoto)+str(sq2)
+            entry=str(identifier)+'\t'+str(title)+'\t\t'+str(author1)+'\t'+str(author2)+'\tcartographic\tAerial photographs\t'+str(year)+'\t'+str(sYear)+'\t'+str(publisher)+'\t'+str(publisherloc)+'\teng\tremote-sensing image\t'+str(scale)+'\t'+str(physicalDescription)+'\t'+str(note)+'\t'+str(subject1)+'\t'+str(subject2)+'\t'+str(subject3)+'\t'+str(continent)+'\t'+str(country)+'\t'+str(province)+'\t'+str(region)+'\t'+str(county)+'\t'+str(city)+'\t'+str(citysection)+'\t'+str(area)+'\tlatitude '+str(latitude)+' ; longitude '+str(longitude)+'\r\n'
             outFile.write(entry) #write entry variable to the respective file in the new folder/directory
             mMaster.write(entry) #write entry variable to the master metatdata sheet
     outFile.close() #close outFile
