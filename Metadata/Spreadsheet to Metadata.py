@@ -1,5 +1,5 @@
 import os
-inFile=open('Master Spreadsheet July 8.tsv')
+inFile=open(input('Input location of the Master Spreadsheet (.tsv) within quotations and press enter: '))
 
 #READ CSV FILE AND GATHER UNIQUE YEARS
 allcontent=inFile.readlines() #Read csv and group contents line by line
