@@ -1,11 +1,10 @@
 #Converts .tsv information to aerial photo index
 # -*- coding: cp1252 -*-
-
 import os
 import sys
 
 #SET INPUT AND OUTPUT FILES
-inFile=open(input('Input location of the master spreadsheet (.tsv) and hit enter: ')) #Name of file located in the directory of this script that stores the information
+inFile=open(input('Input location of the Master Spreadsheet (.tsv) within quotations and press enter: ')) #Name of file located in the directory of this script that stores the information
 #Note that the file entered must be a .csv for this script to work
 outfn='index.html' #Desired name of output file
 if os.path.exists(outfn): #Check if file exists
@@ -16,7 +15,7 @@ else:
     print outfn +' does not already exist!' #This will be written if the file does not exist
 outFile=open(outfn, 'w') #Create a new output File (.html)
 
-#READ TSV FILE
+#READ CSV FILE
 allcontent=inFile.readlines() #Read csv and group contents line by line
 content=allcontent[3:] #Remove the first line from the content as it does not provide useful information
 
@@ -24,11 +23,13 @@ content=allcontent[3:] #Remove the first line from the content as it does not pr
 years=[] #Create an empty array where years from the spreadsheet (.csv, inFile) will be stored
 for line in content:
     item=line.split('\t') #split lines of inFile into 'item' at each comma (,)
-    year=item[4]
+    year=item[17]
+    if year[0]=='[':
+        year=year[1:-1]
     year=year[:4]
     years.append(year) #add the first column [0] to the empty array named years
 uniqueYears=sorted(set(years)) #Get unique years, and sort them numerically
-
+print uniqueYears
 #HEADER SECTION
 head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>\n <script src="js/Autolinker.min.js"></script>\n</head> \n \n'
 outFile.write(head) #write the html header to the outFile
@@ -88,7 +89,7 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
     yflightline=[]
     for line in content:
         item=line.split('\t') #similar to above, split each line into items at each comma
-        year=item[4] #year is in the first column
+        year=item[17] #year is in the first column
         year=year[:4]
         flightline=item[1] #flightline is in the second column
         if uniqueYears[x]==year: #if the year is equal to the first value in the cell (year) then append the flightline in the column beside it to the flightLine array
@@ -96,7 +97,9 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
         flightLine=sorted(set(flightLine)) #sort the flightlines for the year
     for line in content:
         item=line.split('\t')
-        year=item[4] #Here we define each colum as a different variable for use in the marker
+        year=item[17]
+        if year[0]=='[':
+            year=year[1:-1]
         year=year[:4]
         ID=item[2]
         flightline=item[5]
@@ -106,12 +109,12 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
         longitude=item[9]
         img=item[10]
         imglink=item[11]
-        flightline=flightline.translate(None,"-")
-        flightline=flightline.translate(None,"?")
-        flightline=flightline.translate(None,"/")
-        photo=photo.translate(None," ")
-        photo=photo.translate(None,"[")
-        photo=photo.translate(None,"]")
+        cflightline=flightline.translate(None,"-")
+        cflightline=cflightline.translate(None,"?")
+        cflightline=cflightline.translate(None,"/")
+        cphoto=photo.translate(None," ")
+        cphoto=cphoto.translate(None,"[")
+        cphoto=cphoto.translate(None,"]")
         if img=="":
             imgsrc="" #If there is no value in the image column (img="") then don't do anything
         else:
@@ -125,8 +128,11 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
             interest=item[z]
             if interest.startswith('"') and interest.endswith('"'):
                 item[z]=interest[1:-1]
-        year=item[4] #Here we define each colum as a different variable for use in the marker
+        year=item[17]
+        if year[0]=='[':
+            year=year[1:-1]
         year=year[:4]
+        dateother=item[17]
         ID=item[3]
         flightline=item[5]
         photo=item[6]
@@ -135,13 +141,13 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
         longitude=item[9]
         img=item[10]
         dArchive=item[11]
-        flightline=flightline.translate(None,"-")
-        photo=photo.translate(None," ")
-        photo=photo.translate(None,"[")
-        photo=photo.translate(None,"]")
-        photo=photo.translate(None,"/")
-        flightline=flightline.translate(None,"/")
-        flightline=flightline.translate(None,"\'")
+        cflightline=flightline.translate(None,"-")
+        cphoto=photo.translate(None," ")
+        cphoto=cphoto.translate(None,"[")
+        cphoto=cphoto.translate(None,"]")
+        cphoto=cphoto.translate(None,"/")
+        cflightline=cflightline.translate(None,"/")
+        cflightline=cflightline.translate(None,"\'")
         if dArchive!="":
             dalink='<a href="'+str(dArchive)+'" target="_blank">View Metadata in the Digital Archive</a>'
         else:
@@ -153,13 +159,13 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
     
         for y in xrange (0, len(yfl)):
             if flightline==yfl[y] and uniqueYears[x]==year:
-                markers='var '+str(ID)+str(uniqueYears[x])+str(flightline)+str(photo)+'=L.marker(['+str(latitude)+','+str(longitude)+'], {icon: '+str(markercolours[y])+'Icon}).bindPopup(\''+str(imgsrc)+' <strong>Flight Line</strong> '+str(flightline)+'<br> <strong>Photo</strong> '+str(photo)+'<br> <strong>Scale</strong> '+str(scale)+'<br> '+str(dalink)+'\'); \n'
+                markers='var '+str(ID)+str(uniqueYears[x])+str(cflightline)+str(cphoto)+'=L.marker(['+str(latitude)+','+str(longitude)+'], {icon: '+str(markercolours[y])+'Icon}).bindPopup(\''+str(imgsrc)+'<strong>Set Name</strong> '+str(ID)+' '+str(dateother)+' <br><strong>Photo Date</strong> '+str(item[4])+' <br><strong>Flight Line</strong> '+str(flightline)+'<br> <strong>Photo</strong> '+str(photo)+'<br> <strong>Scale</strong> '+str(scale)+'<br> '+str(dalink)+'\'); \n'
                 outFile.write(markers)
                 #1919 photo # have a space and off chaarcters that don't work well with javascript
-                markerarray.append(str(str(ID)+uniqueYears[x])+str(flightline)+str(photo)) #write name of the marker above to the marker array
+                markerarray.append(str(str(ID)+uniqueYears[x])+str(cflightline)+str(cphoto)) #write name of the marker above to the marker array
             markerarray=sorted(set(markerarray)) #sort the marker array
             markerarrayNQ=str(markerarray).translate(None,"'") #remove quotations from the marker array so that it can be read in javascript (ex. ['a', 'b'] becomes [a, b]
-            layerGroup='var Hamilton'+str(uniqueYears[x])+'=L.layerGroup('+str(markerarrayNQ)+'); \n \n' #group all markers by year in a layer group read by javascript 
+            layerGroup='var Hamilton'+str(uniqueYears[x])+'=L.layerGroup('+str(markerarrayNQ)+'); \n \n' #group all markers by year in a layer group read by javascript
             if flightline==yfl[y] and uniqueYears[x]==year:     
                 yearlayers.append('Hamilton'+str(uniqueYears[x])) #adding each layerGroup created (from each year) to the massive array of all layers (yearlayers)
     outFile.write(layerGroup)
