@@ -4,7 +4,7 @@ import os
 import sys
 
 #SET INPUT AND OUTPUT FILES
-inFile=open(input('Input location of the Master Spreadsheet (.tsv) within quotations and press enter: ')) #Name of file located in the directory of this script that stores the information
+inFile=open(input('Input location of the Master Spreadsheet (.tsv) within quotations and press enter: ') #Name of file located in the directory of this script that stores the information
 #Note that the file entered must be a .csv for this script to work
 outfn='index.html' #Desired name of output file
 if os.path.exists(outfn): #Check if file exists
@@ -29,7 +29,6 @@ for line in content:
     year=year[:4]
     years.append(year) #add the first column [0] to the empty array named years
 uniqueYears=sorted(set(years)) #Get unique years, and sort them numerically
-print uniqueYears
 #HEADER SECTION
 head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>\n <script src="js/Autolinker.min.js"></script>\n</head> \n \n'
 outFile.write(head) #write the html header to the outFile
@@ -148,6 +147,19 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
         cphoto=cphoto.translate(None,"/")
         cflightline=cflightline.translate(None,"/")
         cflightline=cflightline.translate(None,"\'")
+        if flightline=='' and photo=='':
+            iTitle=item[0]
+            iphoto=item[0]
+        else:
+            iTitle=''
+            iphoto=photo
+        iTitle=iTitle.translate(None," ")
+        iTitle=iTitle.translate(None,"-")
+        iTitle=iTitle.translate(None," ")
+        iTitle=iTitle.translate(None,"[")
+        iTitle=iTitle.translate(None,"]")
+        iTitle=iTitle.translate(None,"/")
+        iTitle=iTitle.translate(None,",")
         if dArchive!="":
             dalink='<a href="'+str(dArchive)+'" target="_blank">View Metadata in the Digital Archive</a>'
         else:
@@ -159,10 +171,9 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
     
         for y in xrange (0, len(yfl)):
             if flightline==yfl[y] and uniqueYears[x]==year:
-                markers='var '+str(ID)+str(uniqueYears[x])+str(cflightline)+str(cphoto)+'=L.marker(['+str(latitude)+','+str(longitude)+'], {icon: '+str(markercolours[y])+'Icon}).bindPopup(\''+str(imgsrc)+'<strong>Set Name</strong> '+str(ID)+' '+str(dateother)+' <br><strong>Photo Date</strong> '+str(item[4])+' <br><strong>Flight Line</strong> '+str(flightline)+'<br> <strong>Photo</strong> '+str(photo)+'<br> <strong>Scale</strong> '+str(scale)+'<br> '+str(dalink)+'\'); \n'
+                markers='var '+str(ID)+str(uniqueYears[x])+str(cflightline)+str(cphoto)+str(iTitle)+'=L.marker(['+str(latitude)+','+str(longitude)+'], {icon: '+str(markercolours[y])+'Icon}).bindPopup(\''+str(imgsrc)+'<strong>Set Name</strong> '+str(ID)+' '+str(dateother)+' <br><strong>Photo Date</strong> '+str(item[4])+' <br><strong>Flight Line</strong> '+str(flightline)+'<br> <strong>Photo</strong> '+str(iphoto)+'<br> <strong>Scale</strong> '+str(scale)+'<br> '+str(dalink)+'\'); \n'
                 outFile.write(markers)
-                #1919 photo # have a space and off chaarcters that don't work well with javascript
-                markerarray.append(str(str(ID)+uniqueYears[x])+str(cflightline)+str(cphoto)) #write name of the marker above to the marker array
+                markerarray.append(str(str(ID)+uniqueYears[x])+str(cflightline)+str(cphoto)+str(iTitle)) #write name of the marker above to the marker array
             markerarray=sorted(set(markerarray)) #sort the marker array
             markerarrayNQ=str(markerarray).translate(None,"'") #remove quotations from the marker array so that it can be read in javascript (ex. ['a', 'b'] becomes [a, b]
             layerGroup='var Hamilton'+str(uniqueYears[x])+'=L.layerGroup('+str(markerarrayNQ)+'); \n \n' #group all markers by year in a layer group read by javascript
