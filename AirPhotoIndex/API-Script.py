@@ -5,7 +5,7 @@ import sys
 
 #SET INPUT AND OUTPUT FILES
 inFile=open(input('Input location of the Master Spreadsheet (.tsv) within quotations and press enter: ') #Name of file located in the directory of this script that stores the information
-#Note that the file entered must be a .csv for this script to work
+#Note that the file entered must be a .tsv for this script to work
 outfn='index.html' #Desired name of output file
 if os.path.exists(outfn): #Check if file exists
     print 'It appears that '+ outfn +' already exists!' 
