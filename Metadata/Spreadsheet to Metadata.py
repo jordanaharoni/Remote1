@@ -3,7 +3,7 @@ inFile=open(input('Input location of the Master Spreadsheet (.tsv) within quotat
 
 #READ CSV FILE AND GATHER UNIQUE YEARS
 allcontent=inFile.readlines() #Read csv and group contents line by line
-content=allcontent[2:2752] #Remove the first line from the content
+content=allcontent[2:2752] #Remove the first two lines from the content
     #GATHER UNIQUE YEARS FROM SPREADSHEET AND ADD THEM TO AN ARRAY
 years=[] #creates an empty array where all of the years from the spreadsheet will be stored
 for line in content:
@@ -29,8 +29,8 @@ if os.path.exists(mName): #Check if file exists
 mMaster=open(mName, 'wb') #Create a new output File (.txt)
 home=os.getcwd()
     #CREATING HEADERS FOR NEW FILES
-mtitle='Identifier\tTitle\tSubtitle\tCorporate Name/Author\tPersonal Name/Author\tType of resource\tGenre\tDate\tSearchable Date\tPublisher\tPlace of publication\tLanguage\tForm\tExtent/Scale\tPhysical description note\tNote\tSubject(geographic)\tSubject(geographic)\tSubject(geographic)\tContinent\tCountry\tProvince/state\tRegion\tCounty\tCity\tCity section\tArea\tCoordinates\r\n'
-sTitle='identifier\ttitle\tsubtitle\tcorporateauthor\tpersonalauthor\ttypeofresource\tgenreloc\tdateCreated\tsearchDate\tpublisher\tpublicationplace\tlanguage\tphysicalform\tphysicalextent\tphysicalnote\tnote\tsubjectgeographic\tsubjectgeographic\tsubjectgeographic\tcontinent\tcountry\tprovince\tregion\tcounty\tcity\tcitySection\tarea\tcoordinates\r\n'
+mtitle='Identifier\tTitle\tSubtitle\tCorporate Name/Author\tPersonal Name/Author\tType of resource\tGenre\tDate\tPublisher\tPlace of publication\tDate Other\tLanguage\tForm\tExtent/Scale\tPhysical description note\tNote\tSubject(geographic)\tSubject(geographic)\tSubject(geographic)\tContinent\tCountry\tProvince/state\tRegion\tCounty\tCity\tCity section\tArea\tCoordinates\r\n'
+sTitle='identifier\ttitle\tsubtitle\tcorporateauthor\tpersonalauthor\ttypeofresource\tgenreloc\tdateCreated\tpublisher\tpublicationplace\tdateOther\tlanguage\tphysicalform\tphysicalextent\tphysicalnote\tnote\tsubjectgeographic\tsubjectgeographic\tsubjectgeographic\tcontinent\tcountry\tprovince\tregion\tcounty\tcity\tcitySection\tarea\tcoordinates\r\n'
 mMaster.write(mtitle) #Writes title line into mMaster file
 mMaster.write(sTitle) #Write sub title line into mMaster file
 
@@ -116,15 +116,26 @@ for y in xrange (0, len(outFiles)): #iterates through each value in the array ou
                 join=''
             if flightline!='' and photo!='':
                 Tjoin='-'
+                iTitle=''
+            elif flightline=='' and photo=='':
+                Tjoin=''
+                iTitle='-'+str(item[0])
+                iTitle=iTitle.translate(None," ")
+                iTitle=iTitle.translate(None,"[")
+                iTitle=iTitle.translate(None,"]")
+                iTitle=iTitle.translate(None,"/")
+                iTitle=iTitle.translate(None,",")
             else:
                 Tjoin=''
-            identifier='AirPhotos_'+str(IDlocation)+'_'+str(dateother)+str(flightline)+str(join)+str(photo)
+                iTitle=''
+            identifier='AirPhotos_'+str(IDlocation)+'_'+str(dateother)+str(flightline)+str(join)+str(photo)+str(iTitle)
+            print identifier
             flightline=item[5]
             if item[0]!="": #format for if the air photo has a title on it (aka the very first column has content)
                 title=str(item[0])+str(sq1)+str(eflightline)+str(Tjoin)+str(ephoto)+str(sq2)
             else:
-                title='['+str(item[1])+', '+str(dateother)+']'+str(sq1)+str(eflightline)+str(Tjoin)+str(ephoto)+str(sq2)
-            entry=str(identifier)+'\t'+str(title)+'\t\t'+str(author1)+'\t'+str(author2)+'\tcartographic\tAerial photographs\t'+str(year)+'\t'+str(sYear)+'\t'+str(publisher)+'\t'+str(publisherloc)+'\teng\tremote-sensing image\t'+str(scale)+'\t'+str(physicalDescription)+'\t'+str(note)+'\t'+str(subject1)+'\t'+str(subject2)+'\t'+str(subject3)+'\t'+str(continent)+'\t'+str(country)+'\t'+str(province)+'\t'+str(region)+'\t'+str(county)+'\t'+str(city)+'\t'+str(citysection)+'\t'+str(area)+'\tlatitude '+str(latitude)+' ; longitude '+str(longitude)+'\r\n'
+                title='['+str(item[1])+', '+str(sYear)+']'+str(sq1)+str(eflightline)+str(Tjoin)+str(ephoto)+str(sq2)
+            entry=str(identifier)+'\t'+str(title)+'\t\t'+str(author1)+'\t'+str(author2)+'\tcartographic\tAerial photographs\t'+str(sYear)+'\t'+str(publisher)+'\t'+str(publisherloc)+'\t'+str(year)+'\teng\tremote-sensing image\t'+str(scale)+'\t'+str(physicalDescription)+'\t'+str(note)+'\t'+str(subject1)+'\t'+str(subject2)+'\t'+str(subject3)+'\t'+str(continent)+'\t'+str(country)+'\t'+str(province)+'\t'+str(region)+'\t'+str(county)+'\t'+str(city)+'\t'+str(citysection)+'\t'+str(area)+'\tlatitude '+str(latitude)+' ; longitude '+str(longitude)+'\r\n'
             outFile.write(entry) #write entry variable to the respective file in the new folder/directory
             mMaster.write(entry) #write entry variable to the master metatdata sheet
         #WRITE SINGLE YEAR SETS (EX. 1955)
@@ -176,15 +187,25 @@ for y in xrange (0, len(outFiles)): #iterates through each value in the array ou
                 join=''
             if flightline!='' and photo!='':
                 Tjoin='-'
+                iTitle=''
+            elif flightline=='' and photo=='':
+                Tjoin=''
+                iTitle='-'+str(item[0])
+                iTitle=iTitle.translate(None," ")
+                iTitle=iTitle.translate(None,"[")
+                iTitle=iTitle.translate(None,"]")
+                iTitle=iTitle.translate(None,"/")
+                iTitle=iTitle.translate(None,",")
             else:
                 Tjoin=''
-            identifier='AirPhotos_'+str(IDlocation)+'_'+str(dateother)+str(flightline)+str(join)+str(photo)
+                iTitle=''
+            identifier='AirPhotos_'+str(IDlocation)+'_'+str(dateother)+str(flightline)+str(join)+str(photo)+str(iTitle)
             flightline=item[5]
             if item[0]!="": #format for if the air photo has a title on it (aka the very first column has content)
                 title=str(item[0])+str(sq1)+str(eflightline)+str(Tjoin)+str(ephoto)+str(sq2)
             else:
-                title='['+str(item[1])+', '+str(dateother)+']'+str(sq1)+str(eflightline)+str(Tjoin)+str(ephoto)+str(sq2)
-            entry=str(identifier)+'\t'+str(title)+'\t\t'+str(author1)+'\t'+str(author2)+'\tcartographic\tAerial photographs\t'+str(year)+'\t'+str(sYear)+'\t'+str(publisher)+'\t'+str(publisherloc)+'\teng\tremote-sensing image\t'+str(scale)+'\t'+str(physicalDescription)+'\t'+str(note)+'\t'+str(subject1)+'\t'+str(subject2)+'\t'+str(subject3)+'\t'+str(continent)+'\t'+str(country)+'\t'+str(province)+'\t'+str(region)+'\t'+str(county)+'\t'+str(city)+'\t'+str(citysection)+'\t'+str(area)+'\tlatitude '+str(latitude)+' ; longitude '+str(longitude)+'\r\n'
+                title='['+str(item[1])+', '+str(sYear)+']'+str(sq1)+str(eflightline)+str(Tjoin)+str(ephoto)+str(sq2)
+            entry=str(identifier)+'\t'+str(title)+'\t\t'+str(author1)+'\t'+str(author2)+'\tcartographic\tAerial photographs\t'+str(sYear)+'\t'+str(publisher)+'\t'+str(publisherloc)+'\t'+str(year)+'\teng\tremote-sensing image\t'+str(scale)+'\t'+str(physicalDescription)+'\t'+str(note)+'\t'+str(subject1)+'\t'+str(subject2)+'\t'+str(subject3)+'\t'+str(continent)+'\t'+str(country)+'\t'+str(province)+'\t'+str(region)+'\t'+str(county)+'\t'+str(city)+'\t'+str(citysection)+'\t'+str(area)+'\tlatitude '+str(latitude)+' ; longitude '+str(longitude)+'\r\n'
             outFile.write(entry) #write entry variable to the respective file in the new folder/directory
             mMaster.write(entry) #write entry variable to the master metatdata sheet
     outFile.close() #close outFile
