@@ -30,7 +30,7 @@ for line in content:
     years.append(year) #add the first column [0] to the empty array named years
 uniqueYears=sorted(set(years)) #Get unique years, and sort them numerically
 #HEADER SECTION
-head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>\n <script src="js/Autolinker.min.js"></script>\n</head> \n \n'
+head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n <script src="js/Autolinker.min.js"></script>\n</head> \n \n'
 outFile.write(head) #write the html header to the outFile
 
 #ORTHO AERIAL IMAGES YEARS
@@ -184,7 +184,7 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
 
 yearlayers=sorted(set(yearlayers))
 #ADD BASEMAPS
-Basemaps='var grayscale   = L.tileLayer(\'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png\', {id: \'examples.map-20v6611k\', attribution: \'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, \' +\'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, \' +\'Imagery Â© <a href="http://mapbox.com">Mapbox</a>\'}), \n OSMbase = L.tileLayer(\'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\', {attribution: \'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, \' +\'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>\'}), \n streets  = L.tileLayer(\'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png\', {id: \'examples.map-i875mjb7\',   attribution: \'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, \' +\'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, \' +\'Imagery Â© <a href="http://mapbox.com">Mapbox</a>\'}); \n \n'
+Basemaps='var grayscale   = L.tileLayer(\'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png\', {id: \'examples.map-20v6611k\', attribution: \'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, \' +\'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, \' +\'Imagery © <a href="http://mapbox.com">Mapbox</a>\'}), \n OSMbase = L.tileLayer(\'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\', {attribution: \'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, \' +\'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>\'}), \n streets  = L.tileLayer(\'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png\', {id: \'examples.map-i875mjb7\',   attribution: \'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, \' +\'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, \' +\'Imagery © <a href="http://mapbox.com">Mapbox</a>\'}); \n \n'
 outFile.write(Basemaps) #write java for basemaps to outFile
 
 #CREATE MAP
