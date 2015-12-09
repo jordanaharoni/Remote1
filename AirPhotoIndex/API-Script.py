@@ -4,7 +4,7 @@ import os
 import sys
 
 #SET INPUT AND OUTPUT FILES
-inFile=open(input('Input location of the Master Spreadsheet (.tsv) within quotations and press enter: ') #Name of file located in the directory of this script that stores the information
+inFile=open(input('Input location of the Master Spreadsheet (.tsv) within quotations and press enter: ')) #Name of file located in the directory of this script that stores the information
 #Note that the file entered must be a .tsv for this script to work
 outfn='index.html' #Desired name of output file
 if os.path.exists(outfn): #Check if file exists
@@ -161,7 +161,7 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
         iTitle=iTitle.translate(None,"/")
         iTitle=iTitle.translate(None,",")
         if dArchive!="":
-            dalink='<a href="'+str(dArchive)+'" target="_blank">View Metadata in the Digital Archive</a>'
+            dalink='<a href="'+str(dArchive)+'" target="_blank">View/Download the Full-sized Image</a>'
         else:
             dalink=""
         if img=="":
