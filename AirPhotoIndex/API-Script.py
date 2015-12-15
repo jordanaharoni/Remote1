@@ -4,7 +4,8 @@ import os
 import sys
 
 #SET INPUT AND OUTPUT FILES
-inFile=open(input('Input location of the Master Spreadsheet (.tsv) within quotations and press enter: ')) #Name of file located in the directory of this script that stores the information
+inFile=open('Master Spreadsheet.tsv') #Name of file located in the directory of this script that stores the information
+##input('Input location of the Master Spreadsheet (.tsv) within quotations and press enter: ')
 #Note that the file entered must be a .tsv for this script to work
 outfn='index.html' #Desired name of output file
 if os.path.exists(outfn): #Check if file exists
@@ -30,7 +31,7 @@ for line in content:
     years.append(year) #add the first column [0] to the empty array named years
 uniqueYears=sorted(set(years)) #Get unique years, and sort them numerically
 #HEADER SECTION
-head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n <script src="js/Autolinker.min.js"></script>\n</head> \n \n'
+head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<link href="http://loopj.github.io/jquery-simple-slider/css/simple-slider.css" rel="stylesheet" type="text/css" />\n<link rel="stylesheet" href="css/API.css">\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n<script src="js/Autolinker.min.js"></script>\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>\n<script src="http://loopj.github.io/jquery-simple-slider/js/simple-slider.js"></script>\n</head> \n \n'
 outFile.write(head) #write the html header to the outFile
 
 #ORTHO AERIAL IMAGES YEARS
@@ -51,19 +52,13 @@ for i in xrange (3, len(item)): #iterates through the different sub segments sta
             orthoYears.append(integer) #add the year to the array if it is equal to a year in the range in the for loop
 
 #BODY HTML (ADDING THE MAP)
-htmlbody='<body> \n <div id="map" style="width: 90%; height: 90%"></div> \n \n' #width and height can be changed to desired percentage of the frame/browser
+htmlbody='<body> \n <div id="map" style="width: 100%; height: 90%"></div> \n \n' #width and height can be changed to desired percentage of the frame/browser
 outFile.write(htmlbody) #write the body html to the outFile
     #ADD TIMESLIDER TO BODY
 leng=len(uniqueYears) -1
-timeslider=' <fieldset> \n <legend>Time Slider</legend> \n <label for=year>'+str(uniqueYears[0])+'</label> \n<input type="range" min="'+str(uniqueYears[0])+'" max="'+str(orthoYears[-1])+'" value="'+str(uniqueYears[0])+'" id="year" step="1" list="hamyear" onchange="showValue(this.value); layer(this.value)" style="width: 75%;"> \n<datalist id=hamyear> \n'
+timeslider='<fieldset class="align-center"> \n <legend>Time Slider</legend> \n<input type="text" data-slider="true" data-slider-values='+",".join(str(i) for i in uniqueYears)+' data-slider-snap="true"> \n '
 outFile.write(timeslider)
-for x in xrange(0, len(uniqueYears)): 
-    option='<option>'+str(uniqueYears[x]) +'</option> \n' #add each year in spreadsheet between their own timeslide <option> tags
-    outFile.write(option)
-for x in xrange (0, len(orthoYears)):
-    option='<option>'+str(orthoYears[x]) +'</option> \n' #add each year in spreadsheet between their own timeslide <option> tags
-    outFile.write(option)
-timesliderclose='</datalist> \n <label for=year>'+str(orthoYears[-1])+'</label> <strong>Selected Year:</strong> <span id="range">'+str(uniqueYears[0])+'</span> \n </fieldset>\n</body>\n'
+timesliderclose='<label class="align-left" for=year>'+str(uniqueYears[0])+'</label><label class="align-right" for=year>'+str(uniqueYears[-1])+'</label> \n <script> \n $("[data-slider]") \n .each(function () { \n var input = $(this); \n $("<span>") \n .addClass("output") \n .insertAfter($(this)); \n }) \n .bind("slider:ready slider:changed", function (event, data) { \n $(this) \n .nextAll(".output") \n .html(data.value.toFixed(0)); \n }); \n </script> \n</fieldset>\n</body>\n'
 outFile.write(timesliderclose) #Write end html of timeslider to outFile
 
 #BEGIN SCRIPTS
@@ -171,7 +166,7 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
     
         for y in xrange (0, len(yfl)):
             if flightline==yfl[y] and uniqueYears[x]==year:
-                markers='var '+str(ID)+str(uniqueYears[x])+str(cflightline)+str(cphoto)+str(iTitle)+'=L.marker(['+str(latitude)+','+str(longitude)+'], {icon: '+str(markercolours[y])+'Icon}).bindPopup(\''+str(imgsrc)+'<strong>Set Name</strong> '+str(ID)+' '+str(dateother)+' <br><strong>Photo Date</strong> '+str(item[4])+' <br><strong>Flight Line</strong> '+str(flightline)+'<br> <strong>Photo</strong> '+str(iphoto)+'<br> <strong>Scale</strong> '+str(scale)+'<br> '+str(dalink)+'\'); \n'
+                markers='var '+str(ID)+str(uniqueYears[x])+str(cflightline)+str(cphoto)+str(iTitle)+'=L.marker(['+str(latitude)+','+str(longitude)+'], {icon: '+str(markercolours[y])+'Icon, time: "'+str(dateother)+'"}).bindPopup(\''+str(imgsrc)+'<strong>Set Name</strong> '+str(ID)+' '+str(dateother)+' <br><strong>Photo Date</strong> '+str(item[4])+' <br><strong>Flight Line</strong> '+str(flightline)+'<br> <strong>Photo</strong> '+str(iphoto)+'<br> <strong>Scale</strong> '+str(scale)+'<br> '+str(dalink)+'\'); \n'
                 outFile.write(markers)
                 markerarray.append(str(str(ID)+uniqueYears[x])+str(cflightline)+str(cphoto)+str(iTitle)) #write name of the marker above to the marker array
             markerarray=sorted(set(markerarray)) #sort the marker array
@@ -277,7 +272,7 @@ outFile.write(eliff)
 for x in xrange(0, leng+1):
     removelayers='map.removeLayer(Hamilton'+str(uniqueYears[x])+'); '
     outFile.write(removelayers)
-add='orthoAerial.addTo(map);}}; \n'
+add='orthoAerial.addTo(map);}}; \n \n $("[data-slider]") \n .bind("slider:ready slider:changed", function (event, data) { \n layer(data.value); \n });'
 outFile.write(add)
 
 #CLOSE SCRIPT
@@ -292,3 +287,4 @@ outFile.write(Closehtml) #closes html
 print 'The map has been written to file' #once the script has completed the python sheel will say it has been write to the file
 inFile.close() #close inFile
 outFile.close() #close outFile
+
