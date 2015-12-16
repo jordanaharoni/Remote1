@@ -31,7 +31,7 @@ for line in content:
     years.append(year) #add the first column [0] to the empty array named years
 uniqueYears=sorted(set(years)) #Get unique years, and sort them numerically
 #HEADER SECTION
-head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<link href="http://loopj.github.io/jquery-simple-slider/css/simple-slider.css" rel="stylesheet" type="text/css" />\n<link rel="stylesheet" href="css/API.css">\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n<script src="js/Autolinker.min.js"></script>\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>\n<script src="http://loopj.github.io/jquery-simple-slider/js/simple-slider.js"></script>\n</head> \n \n'
+head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<link href="http://loopj.github.io/jquery-simple-slider/css/simple-slider.css" rel="stylesheet" type="text/css" />\n<link rel="stylesheet" href="css/API.css">\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n<script src="js/Autolinker.min.js"></script>\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>\n<script src="js/simple-slider.js"></script>\n</head> \n \n'
 outFile.write(head) #write the html header to the outFile
 
 #ORTHO AERIAL IMAGES YEARS
@@ -56,9 +56,9 @@ htmlbody='<body> \n <div id="map" style="width: 100%; height: 90%"></div> \n \n'
 outFile.write(htmlbody) #write the body html to the outFile
     #ADD TIMESLIDER TO BODY
 leng=len(uniqueYears) -1
-timeslider='<fieldset class="align-center"> \n <legend>Time Slider</legend> \n<input type="text" data-slider="true" data-slider-values='+",".join(str(i) for i in uniqueYears)+' data-slider-snap="true"> \n '
+timeslider='<fieldset class="align-center"> \n <legend>Time Slider</legend> \n<input type="text" data-slider="true" data-slider-values='+",".join(str(i) for i in uniqueYears)+','+",".join(str(i) for i in orthoYears)+' data-slider-snap="true"> \n '
 outFile.write(timeslider)
-timesliderclose='<label class="align-left" for=year>'+str(uniqueYears[0])+'</label><label class="align-right" for=year>'+str(uniqueYears[-1])+'</label> \n <script> \n $("[data-slider]") \n .each(function () { \n var input = $(this); \n $("<span>") \n .addClass("output") \n .insertAfter($(this)); \n }) \n .bind("slider:ready slider:changed", function (event, data) { \n $(this) \n .nextAll(".output") \n .html(data.value.toFixed(0)); \n }); \n </script> \n</fieldset>\n</body>\n'
+timesliderclose='<label class="align-left" for=year>'+str(uniqueYears[0])+'</label><label class="align-right" for=year>'+str(orthoYears[-1])+'</label> \n <script> \n $("[data-slider]") \n .each(function () { \n var input = $(this); \n $("<span>") \n .addClass("output") \n .attr("id", "newId") \n .insertAfter($(this)); \n }) \n .bind("slider:ready slider:changed", function (event, data) { \n $(this) \n .nextAll(".output") \n .html(data.value.toFixed(0)); \n }); \n </script> \n</fieldset>\n</body>\n'
 outFile.write(timesliderclose) #Write end html of timeslider to outFile
 
 #BEGIN SCRIPTS
@@ -234,7 +234,7 @@ selectedyear='function showValue(newValue){document.getElementById("range").inne
 outFile.write(selectedyear)
 
 #ON AND OFF TIMESLIDER FUNCTIONALITY
-onoff='function layer(value) \n  {if (value >='+str(uniqueYears[0])+', value <'+str(uniqueYears[1])+') {' 
+onoff='function layer(value) \n  {if (value =='+str(uniqueYears[0])+') {' 
 outFile.write(onoff) #write beginning of function that will turn on and off layers using the html slider
 #note that because the first and last slider are unique from the middle slider there are three written in order: first (1), middle (n-2), last (1)
 for x in xrange(1, leng):
@@ -245,7 +245,7 @@ firstadd='Hamilton'+str(uniqueYears[0])+'.addTo(map);} \n'
 outFile.write(firstadd)
 
 for x in xrange(1, leng):
-    eliff='else if (value >= '+str(uniqueYears[x])+',value < '+ str(uniqueYears[x+1])+') {'
+    eliff='else if (value == '+str(uniqueYears[x])+') {'
     outFile.write(eliff)
     for y in xrange(0, leng+1):
         if uniqueYears[y]==uniqueYears[x]:
@@ -272,7 +272,7 @@ outFile.write(eliff)
 for x in xrange(0, leng+1):
     removelayers='map.removeLayer(Hamilton'+str(uniqueYears[x])+'); '
     outFile.write(removelayers)
-add='orthoAerial.addTo(map);}}; \n \n $("[data-slider]") \n .bind("slider:ready slider:changed", function (event, data) { \n layer(data.value); \n });'
+add='orthoAerial.addTo(map);}}; \n \n $("body").mouseup(function() { \n layer(Number($("#newId").text())); \n });'
 outFile.write(add)
 
 #CLOSE SCRIPT
