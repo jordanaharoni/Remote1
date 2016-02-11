@@ -272,7 +272,7 @@ outFile.write(eliff)
 for x in xrange(0, leng+1):
     removelayers='map.removeLayer(Hamilton'+str(uniqueYears[x])+'); '
     outFile.write(removelayers)
-add='orthoAerial.addTo(map);}}; \n \n $("body").mouseup(function() { \n layer(Number($("#newId").text())); \n });'
+add='orthoAerial.addTo(map);}}; \n \n $("body").mousemove(function() { \n layer(Number($("#newId").text())); \n });'
 outFile.write(add)
 
 #CLOSE SCRIPT
