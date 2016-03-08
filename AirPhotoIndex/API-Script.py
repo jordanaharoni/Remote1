@@ -30,27 +30,17 @@ for line in content:
     year=year[:4]
     years.append(year) #add the first column [0] to the empty array named years
 uniqueYears=sorted(set(years)) #Get unique years, and sort them numerically
+uniqueYears=map(int,uniqueYears)
 #HEADER SECTION
-head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<link href="http://loopj.github.io/jquery-simple-slider/css/simple-slider.css" rel="stylesheet" type="text/css" />\n<link rel="stylesheet" href="css/API.css">\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n<script src="js/Autolinker.min.js"></script>\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>\n<script src="js/simple-slider.js"></script>\n</head> \n \n'
+head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<link href="http://loopj.github.io/jquery-simple-slider/css/simple-slider.css" rel="stylesheet" type="text/css" />\n<link rel="stylesheet" href="css/API.css">\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n<script src="js/Autolinker.min.js"></script>\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>\n<script src="js/simple-slider.js"></script>\n<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>\n<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" rel="stylesheet" />\n<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" rel="stylesheet" />\n</head> \n \n'
 outFile.write(head) #write the html header to the outFile
 
 #ORTHO AERIAL IMAGES YEARS
-from datetime import date #get the date so that we can check entries up to today's date
-inF=open('data\exp_AirOrthoAttributeGraph.js') #information from shapefile ALWAYS stored in data folder. If the name changes of the file, PLEASE change it here from exp_AirOrthoAttributeGraph.js to the new name!
-contents=inF.readlines() #read all lines within the file
-line=contents[5] #read the first line with content
-item=line.split(',') #split line into sub-sections at each comma
-orthoYears=[] #empty array that the years will be appended to
-for i in xrange (3, len(item)): #iterates through the different sub segments starting at number three
-    yr=item[i] 
-    integer=yr[2:6]
-    if integer=="geom": #it is known that 'geom' follows the last attribute table entry for the shapefile, therefore when this is read we have gone through all the years. This value was found by looking at the inFile (in this case exp_AirOrthoAttributeGraph.js)
-        break #finish interating if the condition in the line above is met
-    integer=int(integer)
-    for x in xrange (1999, date.today().year+1):
-        if x==integer:
-            orthoYears.append(integer) #add the year to the array if it is equal to a year in the range in the for loop
-
+years2=[] #empty array that the years will be appended to
+for x in [1999,2002,2005,2007,2010,2014]:
+      years2.append(x) #add the year to the array if it is equal to a year in the range in the for loop
+orthoYears=sorted(set(years2))
+	  
 #BODY HTML (ADDING THE MAP)
 htmlbody='<body> \n <div id="map" style="width: 100%; height: 90%"></div> \n \n' #width and height can be changed to desired percentage of the frame/browser
 outFile.write(htmlbody) #write the body html to the outFile
@@ -86,7 +76,7 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
         year=item[17] #year is in the first column
         year=year[:4]
         flightline=item[1] #flightline is in the second column
-        if uniqueYears[x]==year: #if the year is equal to the first value in the cell (year) then append the flightline in the column beside it to the flightLine array
+        if str(uniqueYears[x])==year: #if the year is equal to the first value in the cell (year) then append the flightline in the column beside it to the flightLine array
             flightLine.append(item[5]) 
         flightLine=sorted(set(flightLine)) #sort the flightlines for the year
     for line in content:
@@ -113,7 +103,7 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
             imgsrc="" #If there is no value in the image column (img="") then don't do anything
         else:
             imgsrc='<a href="'+str(imglink)+'" target="_blank"><img src="'+str(img)+'" height="200" width="200"></a> <br>' #If image field is not empty then add the image
-        if uniqueYears[x]==year:
+        if str(uniqueYears[x])==year:
             yfl.append(flightline)
     yfl=sorted(set(yfl))
     for line in content:
@@ -165,14 +155,14 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
             imgsrc='<a href="'+str(dArchive)+'" target="_blank"><img src="'+str(img)+'" height="200" width="200"></a> <br>' #If image field is not empty then add the image
     
         for y in xrange (0, len(yfl)):
-            if flightline==yfl[y] and uniqueYears[x]==year:
+            if flightline==yfl[y] and str(uniqueYears[x])==year:
                 markers='var '+str(ID)+str(uniqueYears[x])+str(cflightline)+str(cphoto)+str(iTitle)+'=L.marker(['+str(latitude)+','+str(longitude)+'], {icon: '+str(markercolours[y])+'Icon, time: "'+str(dateother)+'"}).bindPopup(\''+str(imgsrc)+'<strong>Set Name</strong> '+str(ID)+' '+str(dateother)+' <br><strong>Photo Date</strong> '+str(item[4])+' <br><strong>Flight Line</strong> '+str(flightline)+'<br> <strong>Photo</strong> '+str(iphoto)+'<br> <strong>Scale</strong> '+str(scale)+'<br> '+str(dalink)+'\'); \n'
                 outFile.write(markers)
-                markerarray.append(str(str(ID)+uniqueYears[x])+str(cflightline)+str(cphoto)+str(iTitle)) #write name of the marker above to the marker array
+                markerarray.append(str(str(ID)+str(uniqueYears[x]))+str(cflightline)+str(cphoto)+str(iTitle)) #write name of the marker above to the marker array
             markerarray=sorted(set(markerarray)) #sort the marker array
             markerarrayNQ=str(markerarray).translate(None,"'") #remove quotations from the marker array so that it can be read in javascript (ex. ['a', 'b'] becomes [a, b]
-            layerGroup='var Hamilton'+str(uniqueYears[x])+'=L.layerGroup('+str(markerarrayNQ)+'); \n \n' #group all markers by year in a layer group read by javascript
-            if flightline==yfl[y] and uniqueYears[x]==year:     
+            layerGroup='var Hamilton'+str(uniqueYears[x])+'=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers('+str(markerarrayNQ)+'); \n \n' #group all markers by year in a layer group read by javascript
+            if flightline==yfl[y] and str(uniqueYears[x])==year:     
                 yearlayers.append('Hamilton'+str(uniqueYears[x])) #adding each layerGroup created (from each year) to the massive array of all layers (yearlayers)
     outFile.write(layerGroup)
     yfl=[]
@@ -186,40 +176,17 @@ outFile.write(Basemaps) #write java for basemaps to outFile
 Lmap='var map=L.map(\'map\', {center:[43.26,-79.89],zoom: 11,layers:[OSMbase,'+str(yearlayers[0])+']}); \n' #str() says that the lowest year will be turned on when the map starts up
 outFile.write(Lmap) #write map to outFile
 yearlayerz=str(yearlayers).translate(None,"'") #remove single quotations from all years in array yearlayers
-outFile.write('var Years=L.layerGroup('+str(yearlayerz)+'); \n') #create a layer group containing all years as read by the java
+outFile.write('var Years=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers('+str(yearlayerz)+'); \n') #create a layer group containing all years as read by the java
 
-#ADD ORTHOPHOTO FUNCTIONS
-inF=open('data\exp_AirOrthoAttributeGraph.js') #information from shapefile ALWAYS stored in data folder. If the name changes of the file, PLEASE change it here from exp_AirOrthoAttributeGraph.js to the new name!
-contents=inF.readlines() #read all lines within the file
-line=contents[5] #read the first line with content
-item=line.split(',') #split line into sub-sections at each comma
-
-line=line.translate(None,",")
-line=line.translate(None,"{")
-line=line.translate(None,"}")
-line=line.translate(None,'"')
-line=line.translate(None,':')
-item=line.split(' ')
-orthoFunc='function pop_ORTHOTILES(feature, layer) {var popupContent = '
-outFile.write(orthoFunc)
-for n in xrange (7, len(item),2):
-    ditem=item[n]
-    if ditem=="":
-        break
-    else:
-        if n!=7:
-            outFile.write(' + ')
-        field='\'<br><strong>'+str(ditem)+': </strong>\' + Autolinker.link(String(feature.properties[\''+str(ditem)+'\']))'
-        outFile.write(field)
-finish=';layer.bindPopup(popupContent);}\nfunction doStyleORTHOTILES(feature) {return {color: \'#000000\',fillColor: \'#b6b6b6\',weight: 1,dashArray: \'\',opacity: 0.35,fillOpacity: 0.35};} \nvar orthoAerial= new L.geoJson(exp_AirOrthoAttributeGraph,{onEachFeature: pop_ORTHOTILES,style: doStyleORTHOTILES});\n\n'
-outFile.write(finish)
-    
-##orthoFunc='function pop_ORTHOTILES(feature, layer) {var popupContent = \'<strong>Image Name: </strong>\' + Autolinker.link(String(feature.properties[\'IMAGE_NAME\'])) + \'<br><strong>Available Years</strong><br><strong>1999: </strong>\' + Autolinker.link(String(feature.properties[\'YEAR_1999\'])) + \'<br><strong>2002: </strong>\' + Autolinker.link(String(feature.properties[\'YEAR_2002\'])) + \'<br><strong>2005: </strong>\' + Autolinker.link(String(feature.properties[\'YEAR_2005\'])) + \'<br><strong>2007: </strong>\' + Autolinker.link(String(feature.properties[\'YEAR_2007\'])) + \'<br><strong>2009: </strong>\' + Autolinker.link(String(feature.properties[\'YEAR_2009\']));layer.bindPopup(popupContent);}\nfunction doStyleORTHOTILES(feature) {return {color: \'#000000\',fillColor: \'#b6b6b6\',weight: 3.5,dashArray: \'\',opacity: 0.35,fillOpacity: 0.35};} \nvar orthoAerial= new L.geoJson(exp_AirOrthoAttributeGraph,{onEachFeature: pop_ORTHOTILES,style: doStyleORTHOTILES});\n\n'
-##outFile.write(orthoFunc)
 
 #GROUP BASEMAP LAYERS
 GBasemaps='var baseLayers = {"OSM": OSMbase,"Grayscale": grayscale,"Streets": streets}; \n \n'
 outFile.write(GBasemaps) #write baseLayers variable in java to the outFile
+
+#GROUP OrthoImagery LAYERS
+for x in xrange(0,len(orthoYears)):
+	layer = "var Hamilton_"+str(orthoYears[x])+" = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_"+str(orthoYears[x])+"/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});\n"
+	outFile.write(layer) #write ortholayer variable in java to the outFile
 
 #BASEMAP LAYER CONTROL
 LCGBasemaps='L.control.layers(baseLayers).addTo(map); \n' #add baseLayers to the 'map' variable
@@ -229,51 +196,69 @@ outFile.write(LCGBasemaps)
 mapScale='L.control.scale({options: {position: \'bottomleft\',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map); \n \n' #add a scale bar to the 'map' variable
 outFile.write(mapScale)
 
-#SHOW SELECTED YEAR
-selectedyear='function showValue(newValue){document.getElementById("range").innerHTML=newValue;}; \n \n' #creates function that shows the year selected on the slider
-outFile.write(selectedyear)
-
 #ON AND OFF TIMESLIDER FUNCTIONALITY
+
+
+def remChoose(x,years): #decide whether the remove function should be written for the points (uniqueYears) or orthophotos (orthoYears)
+	if years==uniqueYears:
+		return 'map.removeLayer(Hamilton'+str(x)+');'
+	elif years==orthoYears:
+		return 'map.removeLayer(Hamilton_'+str(x)+');'
+	else: pass		
+def addChoose(x,years): #decide whether the add function should be written for the points (uniqueYears) or orthophotos (orthoYears)
+	if years==uniqueYears:
+		return 'Hamilton'+str(x)+'.addTo(map);'
+	elif years==orthoYears:
+		return 'Hamilton_'+str(x)+'.addTo(map).bringToFront();'
+	else: pass		
+def Remove(x,years,layer): 
+	if x in years:
+		layer.append(remChoose(x,years))
+	else: pass
+def Add(x,years):
+	if x in years:
+		addlayer=addChoose(x,years)
+		outFile.write(addlayer)
+	else: pass
+def removeRun(combyear,x,years):
+	removelayers = []
+	for y in xrange(0,len(combyear)):
+		if combyear[y]==combyear[x]:
+			continue
+		Remove(combyear[y],years,removelayers)
+	outFile.write(' '.join(removelayers))
+	
+
 onoff='function layer(value) \n  {if (value =='+str(uniqueYears[0])+') {' 
 outFile.write(onoff) #write beginning of function that will turn on and off layers using the html slider
 #note that because the first and last slider are unique from the middle slider there are three written in order: first (1), middle (n-2), last (1)
-for x in xrange(1, leng):
-    removelayers='map.removeLayer(Hamilton'+str(uniqueYears[x])+'); '
-    outFile.write(removelayers)
-outFile.write('map.removeLayer(orthoAerial); ')
-firstadd='Hamilton'+str(uniqueYears[0])+'.addTo(map);} \n'
-outFile.write(firstadd)
+yearscomb = sorted(set(uniqueYears)|set(orthoYears))
+removeRun(yearscomb,0,uniqueYears)
+removeRun(yearscomb,0,orthoYears)   
+Add(yearscomb[0],uniqueYears)
+outFile.write('} \n')
 
-for x in xrange(1, leng):
-    eliff='else if (value == '+str(uniqueYears[x])+') {'
-    outFile.write(eliff)
-    for y in xrange(0, leng+1):
-        if uniqueYears[y]==uniqueYears[x]:
-            continue
-        removelayers='map.removeLayer(Hamilton'+str(uniqueYears[y])+'); '
-        outFile.write(removelayers)
-    outFile.write('map.removeLayer(orthoAerial); ')
-    addlayer='Hamilton'+str(uniqueYears[x])+'.addTo(map);} \n'
-    outFile.write(addlayer)
-
-    #LAST VALUE IN RANGE
-eliff='else if (value == '+str(uniqueYears[leng])+') {'
+yearscomb = sorted(set(uniqueYears)|set(orthoYears))		
+for x in xrange(1, len(yearscomb)-1):
+	eliff='else if (value == '+str(yearscomb[x])+') {'
+	outFile.write(eliff)
+	removeRun(yearscomb,x,uniqueYears)
+	removeRun(yearscomb,x,orthoYears)
+	Add(yearscomb[x],uniqueYears)
+	Add(yearscomb[x],orthoYears)
+	outFile.write('} \n')
+		
+eliff='else if (value == '+str(yearscomb[-1])+') {'
 outFile.write(eliff)
-for x in xrange(0, leng):
-    removelayers='map.removeLayer(Hamilton'+str(uniqueYears[x])+'); '
-    outFile.write(removelayers)
-outFile.write('map.removeLayer(orthoAerial); ')
-endadd='Hamilton'+str(uniqueYears[x+1])+'.addTo(map);} \n' 
-outFile.write(endadd)
+removeRun(yearscomb,-1,uniqueYears)
+removeRun(yearscomb,-1,orthoYears)
+Add(yearscomb[-1],uniqueYears)
+Add(yearscomb[-1],orthoYears)
+outFile.write('}}; \n\n')
 
-    #ADD ORTHO AERIAL IMAGES AND YEARS TO TIMESLIDER
-eliff='else if (value > '+str(uniqueYears[-1])+',value <= '+str(orthoYears[-1])+') {'
-outFile.write(eliff)
-for x in xrange(0, leng+1):
-    removelayers='map.removeLayer(Hamilton'+str(uniqueYears[x])+'); '
-    outFile.write(removelayers)
-add='orthoAerial.addTo(map);}}; \n \n $("body").mousemove(function() { \n layer(Number($("#newId").text())); \n });'
-outFile.write(add)
+#TIMESLIDER FUNCTION
+timesliderfunc = '$("body").mousemove(function() { \n layer(Number($("#newId").text())); \n });' 
+outFile.write(timesliderfunc)
 
 #CLOSE SCRIPT
 closescript='</script> \n\n'
