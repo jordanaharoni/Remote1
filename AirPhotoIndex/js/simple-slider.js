@@ -38,9 +38,18 @@ var __slice = [].slice,
       if (this.input.attr("id")) {
         this.slider.attr("id", this.input.attr("id") + "-slider");
       }
-      this.track = this.createDivElement("track").css({
+	  this.track = this.createDivElement("track").css({
         width: "100%"
       });
+	  if (this.settings.allowedValues) {
+		var range,$lbl;
+		$lbl=this.track;
+		range = this.getRange();
+        $.each(this.settings.allowedValues, function() {
+			pos=(this - range.min) / (range.max - range.min);
+			$('<div>').addClass("ticks").css('left', (Math.round(pos*10000)/100 + '%' )).appendTo($lbl);
+		})
+	  };
       if (this.settings.highlight) {
         this.highlightTrack = this.createDivElement("highlight-track").css({
           width: "0"
@@ -319,8 +328,20 @@ var __slice = [].slice,
     };
 
     return SimpleSlider;
-
+   SimpleSlider.prototype.createTick = function(classname) {
+	   var range,pos;
+	   if (this.settings.allowedValues) {
+		range = this.getRange();
+		pos=null
+        $.each(this.settings.allowedValues, function() {
+		  pos=(this - range.min) / (range.max - range.min)
+		  $('<div>').addClass("ticks").css(dir, (Math.round(pos*100) + '%' )).appendTo(this.track)
+		})
+	  }
+   };
   })();
+  
+
   $.extend($.fn, {
     simpleSlider: function() {
       var params, publicMethods, settingsOrMethod;
