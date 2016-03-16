@@ -15,6 +15,8 @@
 <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>
 <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" rel="stylesheet" />
 <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" rel="stylesheet" />
+<link rel="stylesheet" href="http://eclipse1979.github.io/leaflet.slider/dist/leaflet-slider.css">
+<script src="http://eclipse1979.github.io/leaflet.slider/dist/leaflet-slider.js"></script>
 </head> 
  
 <body> 
@@ -5270,9 +5272,12 @@ var map=L.map('map', {center:[43.26,-79.89],zoom: 11,layers:[OSMbase]});
 var Years=L.layerGroup([Hamilton1919, Hamilton1927, Hamilton1934, Hamilton1943, Hamilton1950, Hamilton1951, Hamilton1952, Hamilton1953, Hamilton1954, Hamilton1955, Hamilton1956, Hamilton1958, Hamilton1959, Hamilton1960, Hamilton1961, Hamilton1962, Hamilton1963, Hamilton1964, Hamilton1965, Hamilton1966, Hamilton1967, Hamilton1969, Hamilton1970, Hamilton1972, Hamilton1978, Hamilton1980, Hamilton1985, Hamilton1988, Hamilton1990, Hamilton1994, Hamilton1997, Hamilton1999, Hamilton2000, Hamilton2002, Hamilton2005, Hamilton2007, Hamilton2010, Hamilton2014]); 
 var id={1934: Hamilton1934, 1988: Hamilton1988, 1927: Hamilton1927, 1985: Hamilton1985, 1969: Hamilton1969, 1980: Hamilton1980, 1964: Hamilton1964, 1965: Hamilton1965, 1966: Hamilton1966, 1967: Hamilton1967, 1960: Hamilton1960, 1961: Hamilton1961, 1962: Hamilton1962, 1963: Hamilton1963, 2014: Hamilton2014, 2010: Hamilton2010, 1990: Hamilton1990, 2005: Hamilton2005, 1955: Hamilton1955, 1954: Hamilton1954, 1956: Hamilton1956, 1951: Hamilton1951, 1950: Hamilton1950, 1953: Hamilton1953, 1952: Hamilton1952, 1959: Hamilton1959, 1958: Hamilton1958, 1919: Hamilton1919, 1994: Hamilton1994, 1997: Hamilton1997, 1978: Hamilton1978, 1999: Hamilton1999, 1972: Hamilton1972, 1970: Hamilton1970, 2002: Hamilton2002, 2000: Hamilton2000, 2007: Hamilton2007, 1943: Hamilton1943}; 
 var baseLayers = {"OSM": OSMbase,"Grayscale": grayscale,"Streets": streets}; 
-L.control.layers(baseLayers).addTo(map); 
+L.control.layers(baseLayers,null,{collapsed:false}).addTo(map); 
 L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map); 
  
+slider = L.control.slider(function(value) {Hamilton_1999.setOpacity(value);Hamilton_2002.setOpacity(value);Hamilton_2005.setOpacity(value);Hamilton_2007.setOpacity(value);Hamilton_2010.setOpacity(value);Hamilton_2014.setOpacity(value);},
+{position: "topright",max: 1,value: 1,step:0.05,size: "200px",collapsed: false,id: "slider"}).addTo(map);
+
 function layer(value) 
   {if (map.hasLayer(id[value])==false) {map.eachLayer(function(layer){if (Years.hasLayer(layer)==true) {map.removeLayer(layer)}}); id[value].addTo(map).bringToFront();}};
 $("body").mousemove(function() { 

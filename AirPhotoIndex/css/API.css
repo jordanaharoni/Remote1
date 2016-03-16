@@ -52,3 +52,27 @@
     display: block;
 	float: right;
 }
+.leaflet-control-slider {
+	box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.4);
+	background: none repeat scroll 0% 0% #FFF;
+	border-radius: 5px;
+	padding-top: 12px;
+}
+.leaflet-control-slider.leaflet-control-slider-horizontal p.leaflet-control-slider-value {
+	width: 0px;
+	color: transparent;
+	border-right: 0px solid #CCC;
+}
+.leaflet-control-slider:after{  
+	content: "Opacity";
+	position: absolute;
+	bottom: 40;
+	left: 0;
+	right: 0;
+	height: 7px;
+	font-size: 15;
+	text-align: center;
+}
+.leaflet-control-slider.leaflet-control-slider-expanded p.leaflet-control-slider-value {
+    display: none !important;
+}
