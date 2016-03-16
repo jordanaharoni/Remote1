@@ -32,7 +32,7 @@ for line in content:
 markerYears=sorted(set(years)) #Get unique years, and sort them numerically
 markerYears=map(int,markerYears)
 #HEADER SECTION
-head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<link href="http://loopj.github.io/jquery-simple-slider/css/simple-slider.css" rel="stylesheet" type="text/css" />\n<link rel="stylesheet" href="css/API.css">\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n<script src="js/Autolinker.min.js"></script>\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>\n<script src="js/simple-slider.js"></script>\n<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>\n<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" rel="stylesheet" />\n<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" rel="stylesheet" />\n</head> \n \n'
+head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<link href="http://loopj.github.io/jquery-simple-slider/css/simple-slider.css" rel="stylesheet" type="text/css" />\n<link rel="stylesheet" href="css/API.css">\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n<script src="js/Autolinker.min.js"></script>\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>\n<script src="js/simple-slider.js"></script>\n<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>\n<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" rel="stylesheet" />\n<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" rel="stylesheet" />\n<link rel="stylesheet" href="http://eclipse1979.github.io/leaflet.slider/dist/leaflet-slider.css">\n<script src="http://eclipse1979.github.io/leaflet.slider/dist/leaflet-slider.js"></script>\n</head> \n \n'
 outFile.write(head) #write the html header to the outFile
 
 #ORTHO AERIAL IMAGES YEARS
@@ -196,12 +196,21 @@ outFile.write('var baseLayers = {"OSM": OSMbase,"Grayscale": grayscale,"Streets"
 
 
 #BASEMAP LAYER CONTROL
-LCGBasemaps='L.control.layers(baseLayers).addTo(map); \n' #add baseLayers to the 'map' variable
+LCGBasemaps='L.control.layers(baseLayers,null,{collapsed:false}).addTo(map); \n' #add baseLayers to the 'map' variable
 outFile.write(LCGBasemaps)
 
 #ADD SCALE TO MAP
 mapScale='L.control.scale({options: {position: \'bottomleft\',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map); \n \n' #add a scale bar to the 'map' variable
 outFile.write(mapScale)
+
+##ADD OPACITY SLIDER
+opacFunction='slider = L.control.slider(function(value) {'
+outFile.write(opacFunction)
+for x in xrange(0,len(orthoYears)):
+	opacLayer='Hamilton_'+str(orthoYears[x])+'.setOpacity(value);'
+	outFile.write(opacLayer)
+opacEnd='},\n{position: "topright",max: 1,value: 1,step:0.05,size: "200px",collapsed: false,id: "slider"}).addTo(map);\n\n'
+outFile.write(opacEnd)
 
 ## TIMESLIDER SWITCHING BETWEEN YEARS
 yearswitch='function layer(value) \n  {if (map.hasLayer(id[value])==false) {map.eachLayer(function(layer){if (Years.hasLayer(layer)==true) {map.removeLayer(layer)}}); id[value].addTo(map).bringToFront();}};\n'  
