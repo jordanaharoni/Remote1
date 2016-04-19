@@ -32,24 +32,30 @@ for line in content:
 markerYears=sorted(set(years)) #Get unique years, and sort them numerically
 markerYears=map(int,markerYears)
 #HEADER SECTION
-head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title> \n <meta charset="utf-8" /> \n <meta name="viewport" content="width=device-width, initial-scale=1.0"> \n <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" /> \n <link rel="stylesheet" type="text/css" href="css/own_style.css">\n<link href="http://loopj.github.io/jquery-simple-slider/css/simple-slider.css" rel="stylesheet" type="text/css" />\n<link rel="stylesheet" href="css/API.css">\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n<script src="js/Autolinker.min.js"></script>\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>\n<script src="js/simple-slider.js"></script>\n<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>\n<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" rel="stylesheet" />\n<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" rel="stylesheet" />\n<link rel="stylesheet" href="http://eclipse1979.github.io/leaflet.slider/dist/leaflet-slider.css">\n<script src="http://eclipse1979.github.io/leaflet.slider/dist/leaflet-slider.js"></script>\n</head> \n \n'
+head='<html> \n <head> \n <title>McMaster Aerial Photographic Index</title>\n<meta charset="utf-8" />\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />\n<link rel="stylesheet" type="text/css" href="css/own_style.css">\n<link href="http://loopj.github.io/jquery-simple-slider/css/simple-slider.css" rel="stylesheet" type="text/css" />\n<link rel="stylesheet" href="css/API.css">\n<link rel="stylesheet" href="https://ismyrnow.github.io/Leaflet.groupedlayercontrol/src/leaflet.groupedlayercontrol.css">\n<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>\n<script src="data/FIP_bounds.js"></script>\n<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>\n<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>\n<script src="https://ismyrnow.github.io/Leaflet.groupedlayercontrol/src/leaflet.groupedlayercontrol.js"></script>\n<script src="js/simple-slider.js"></script>\n<script src="js/control-layers.js"></script>\n<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>\n<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" rel="stylesheet" />\n<link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" rel="stylesheet" />\n<link rel="stylesheet" href="http://eclipse1979.github.io/leaflet.slider/dist/leaflet-slider.css">\n<script src="http://eclipse1979.github.io/leaflet.slider/dist/leaflet-slider.js"></script>\n</head> \n \n'
 outFile.write(head) #write the html header to the outFile
 
 #ORTHO AERIAL IMAGES YEARS
 years2=[] #empty array that the years will be appended to
-for x in [1999,2002,2005,2007,2010,2014]:
+for x in [1999,2002,2005,2007,2010,2014]: ####ADD TO THIS LIST IF MORE LAYERS ARE AVAILABLE
       years2.append(x) #add the year to the array if it is equal to a year in the range in the for loop
 orthoYears=sorted(set(years2))
+
+#FIP IMAGES YEARS
+years3=[] #empty array that the years will be appended to
+for x in [1898]:
+      years3.append(x) #add the year to the array if it is equal to a year in the range in the for loop
+FIPYears=sorted(set(years3))
 	  
 #BODY HTML (ADDING THE MAP)
 htmlbody='<body> \n <div id="map" style="width: 100%; height: 90%"></div> \n \n' #width and height can be changed to desired percentage of the frame/browser
 outFile.write(htmlbody) #write the body html to the outFile
     #ADD TIMESLIDER TO BODY
-uniqueYears=sorted(set(markerYears)|set(orthoYears))
+uniqueYears=sorted(set(markerYears)|set(orthoYears)|set(FIPYears))
 leng=len(uniqueYears) -1
-timeslider='<fieldset class="align-center"> \n <legend>Time Slider</legend> \n<input type="text" data-slider="true" data-slider-values='+",".join(str(i) for i in uniqueYears)+','+",".join(str(i) for i in orthoYears)+' data-slider-snap="true"> \n '
+timeslider='<fieldset class="align-center"> \n <legend>Time Slider</legend> \n<input type="text" id="slide" data-slider="true" data-slider-values='+",".join(str(i) for i in uniqueYears)+' data-slider-snap="true" value=1919> \n '
 outFile.write(timeslider)
-timesliderclose='<label class="align-left" for=year>'+str(uniqueYears[0])+'</label><label class="align-right" for=year>'+str(uniqueYears[-1])+'</label> \n <script> \n $("[data-slider]") \n .each(function () { \n var input = $(this); \n $("<span>") \n .addClass("output") \n .attr("id", "newId") \n .insertAfter($(this)); \n }) \n .bind("slider:ready slider:changed", function (event, data) { \n $(this) \n .nextAll(".output") \n .html(data.value.toFixed(0)); \n }); \n </script> \n</fieldset>\n</body>\n'
+timesliderclose='<label class="align-left" for=year>'+str(uniqueYears[0])+'</label><label class="align-right" for=year>'+str(uniqueYears[-1])+'</label> \n <script> \n $("[data-slider]") \n .each(function () { \n var input = $(this); \n $("<span>") \n .addClass("output") \n .attr("id", "newId") \n .insertAfter($(this)); \n }) \n .bind("slider:ready slider:changed", function (event, data) { \n $(this) \n .nextAll(".output") \n .html(data.value.toFixed(0)); \n }); \n $(document).ready(function()\n{$("body").on("click",":radio",function(evt) {radio(evt.target.layerId);});\n}); \n</script> \n</fieldset>\n</body>\n'
 outFile.write(timesliderclose) #Write end html of timeslider to outFile
 
 #BEGIN SCRIPTS
@@ -67,6 +73,7 @@ for colour in markercolours:
 markercolours=['blue', 'orange', 'green', 'purple', 'yellow', 'red', 'pink', 'gray', 'maroon', 'brown', 'lightblue', 'lightgreen', 'blue', 'orange', 'green', 'purple', 'yellow', 'red', 'pink', 'gray', 'maroon', 'brown', 'lightblue', 'lightgreen', 'blue', 'orange', 'green', 'purple', 'yellow', 'red', 'pink', 'gray', 'maroon', 'brown', 'lightblue', 'lightgreen', 'blue', 'orange', 'green', 'purple', 'yellow', 'red',  'pink', 'gray', 'maroon', 'brown', 'lightblue', 'lightgreen']
 flightLine=[] #Create an empty array where all flight lines of the same year will be stored
 yearlayers=[] #Create an empty array where all the different year layer groups will be mentioned
+FIPbounds=[] #Create an empty array where all the different FIP bounds will be mentioned
 yfl=[]
 id={}
 for x in xrange(0, len(uniqueYears)): #iterates through each year
@@ -166,6 +173,14 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
 		layer = "var Hamilton_"+str(uniqueYears[x])+" = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_"+str(uniqueYears[x])+"/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});\n"
 		outFile.write(layer) #write baseLayers variable in java to the outFile
 		layerarray.append('Hamilton_'+str(uniqueYears[x]))
+	if uniqueYears[x] in FIPYears:
+		layer = "var FIP_"+str(uniqueYears[x])+" = L.tileLayer('http://tiles.mcmaster.ca/FIP_"+str(uniqueYears[x])+"/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});\n"
+		outFile.write(layer) #write baseLayers variable in java to the outFile
+		layerarray.append('FIP_'+str(uniqueYears[x]))
+		bound = "var bound_"+str(uniqueYears[x])+" =L.geoJson(B_"+str(uniqueYears[x])+",{style:{'fillOpacity':0,'opacity':0}});\n"
+		outFile.write(bound)
+		layerarray.append('bound_'+str(uniqueYears[x]))
+		FIPbounds.append('bound_'+str(uniqueYears[x]))
 	if uniqueYears[x] in markerYears:
 		layerarray.append('Markers'+str(uniqueYears[x]))
 	markerarray=sorted(set(markerarray)) #sort the marker array
@@ -181,26 +196,30 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
 	yfl = []
 	
 yearlayers=sorted(set(yearlayers))
+FIPbounds=sorted(set(FIPbounds))
 #ADD BASEMAPS
 Basemaps="var mbAttr = 'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, ' + \n '<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, ' + \n 'Imagery © <a href=\"http://mapbox.com\">Mapbox</a>' \n var osmattr='Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, ' + \n '<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>' \n var mbUrl2 = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoibmlja2x1eW1lcyIsImEiOiJjaWhzM2dsem4wMGs2dGZraGY1MzN3YmZ2In0.fDtuZ8EU3C5330xaVS4l6A' \n var grayscale =	L.tileLayer(mbUrl2,{id: 'mapbox.light', attribution: mbAttr}), \n OSMbase = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: osmattr}), \n streets =	L.tileLayer(mbUrl2,{id: 'mapbox.high-contrast', attribution: mbAttr}); \n \n"
 outFile.write(Basemaps) #write java for basemaps to outFile
 
 #CREATE MAP
-Lmap='var map=L.map(\'map\', {center:[43.26,-79.89],zoom: 11,layers:[OSMbase]}); \n' #str() says that the lowest year will be turned on when the map starts up
+Lmap='var map=L.map(\'map\', {center:[43.26,-79.89],zoom: 11,layers:[OSMbase]}); \n\n' #str() says that the lowest year will be turned on when the map starts up
 outFile.write(Lmap) #write map to outFile
+FIPlayers=str(FIPbounds).translate(None,"'") #remove single quotations from all years in array FIPlayers
+outFile.write('var FIP=L.featureGroup('+str(FIPlayers)+'); \n')
+outFile.write("map.on('layeradd', function (e) {if (FIP.hasLayer(e.layer)){(map.fitBounds(e.layer.getBounds()))};})\n\n")
 yearlayerz=str(yearlayers).translate(None,"'") #remove single quotations from all years in array yearlayers
-outFile.write('var Years=L.layerGroup('+str(yearlayerz)+'); \n')
+outFile.write('var Years=L.layerGroup('+str(yearlayerz)+'); \n\n')
 ids=str(id).translate(None,"'")
 outFile.write('var id='+str(ids)+'; \n') 
 outFile.write('var baseLayers = {"OSM": OSMbase,"Grayscale": grayscale,"Streets": streets}; \n') 
-
+outFile.write('var overlays = {"Ortho Imagery":{"Hamilton 2014": Hamilton2014,"Hamilton 2010": Hamilton2010,"Hamilton 2007": Hamilton2007,"Hamilton 2005": Hamilton2005,"Hamilton 2002": Hamilton2002,"Hamilton 1999": Hamilton1999},\n"Fire Insurance Plans":{"Hamilton 1898":Hamilton1898}};\n\n')
 
 #BASEMAP LAYER CONTROL
-LCGBasemaps='L.control.layers(baseLayers,null,{collapsed:false}).addTo(map); \n' #add baseLayers to the 'map' variable
+LCGBasemaps='var control = L.control.groupedLayers(baseLayers, overlays,{exclusiveGroups: ["Ortho Imagery","Fire Insurance Plans"],collapsed:false}).addTo(map); \n\n' #add baseLayers to the 'map' variable
 outFile.write(LCGBasemaps)
 
 #ADD SCALE TO MAP
-mapScale='L.control.scale({options: {position: \'bottomleft\',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map); \n \n' #add a scale bar to the 'map' variable
+mapScale='L.control.scale({options: {position: \'bottomleft\',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map); \n\n' #add a scale bar to the 'map' variable
 outFile.write(mapScale)
 
 ##ADD OPACITY SLIDER
@@ -212,12 +231,16 @@ for x in xrange(0,len(orthoYears)):
 opacEnd='},\n{position: "topright",max: 1,value: 1,step:0.05,size: "200px",collapsed: false,id: "slider"}).addTo(map);\n\n'
 outFile.write(opacEnd)
 
+## BASEMAP LAYER CONTROL CHANGE TIMESLIDER VALUE
+sliderval='function radio(layerid)\n{obj = control._layers[layerid];\nfor(var key in id) {\n  if(id[key] === obj.layer) {$("#slide").simpleSlider("setValue", key);};\n};}\n\n'
+outFile.write(sliderval) 
+
 ## TIMESLIDER SWITCHING BETWEEN YEARS
-yearswitch='function layer(value) \n  {if (map.hasLayer(id[value])==false) {map.eachLayer(function(layer){if (Years.hasLayer(layer)==true) {map.removeLayer(layer)}}); id[value].addTo(map).bringToFront();}};\n'  
+yearswitch='function layer(value) \n  {if (map.hasLayer(id[value])==false) {map.eachLayer(function(layer){if (Years.hasLayer(layer)==true) {map.removeLayer(layer)}}); id[value].addTo(map).bringToFront();}};\n\n'  
 outFile.write(yearswitch) 
 
 #TIMESLIDER FUNCTION
-timesliderfunc = '$("body").mousemove(function() { \n layer(Number($("#newId").text())); \n });' 
+timesliderfunc = '$("body").mousemove(function() { \n layer(Number($("#newId").text())); \n });\n\n' 
 outFile.write(timesliderfunc)
 
 #CLOSE SCRIPT
