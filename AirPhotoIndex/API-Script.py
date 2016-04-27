@@ -37,13 +37,13 @@ outFile.write(head) #write the html header to the outFile
 
 #ORTHO AERIAL IMAGES YEARS
 years2=[] #empty array that the years will be appended to
-for x in [1999,2002,2005,2007,2010,2014]: ####ADD TO THIS LIST IF MORE LAYERS ARE AVAILABLE
+for x in [1999,2002,2005,2007,2010,2014]: ####ADD TO THIS LIST IF MORE LAYERS ARE AVAILABLE on the tile.mcmaster.ca server
       years2.append(x) #add the year to the array if it is equal to a year in the range in the for loop
 orthoYears=sorted(set(years2))
 
 #FIP IMAGES YEARS
 years3=[] #empty array that the years will be appended to
-for x in [1898]:
+for x in [1898]: ####ADD TO THIS LIST IF MORE LAYERS ARE AVAILABLE on the tile.mcmaster.ca server
       years3.append(x) #add the year to the array if it is equal to a year in the range in the for loop
 FIPYears=sorted(set(years3))
 	  
@@ -53,10 +53,10 @@ outFile.write(htmlbody) #write the body html to the outFile
     #ADD TIMESLIDER TO BODY
 uniqueYears=sorted(set(markerYears)|set(orthoYears)|set(FIPYears))
 leng=len(uniqueYears) -1
-timeslider='<fieldset class="align-center"> \n <legend>Time Slider</legend> \n<input type="text" id="slide" data-slider="true" data-slider-values='+",".join(str(i) for i in uniqueYears)+' data-slider-snap="true" value=1919> \n '
+timeslider='<fieldset class="align-center"> \n <legend>Time Slider</legend> \n<input type="text" id="slide" data-slider="true" data-slider-values='+",".join(str(i) for i in markerYears)+' data-slider-snap="true" value=1919> \n '
 outFile.write(timeslider)
-timesliderclose='<label class="align-left" for=year>'+str(uniqueYears[0])+'</label><label class="align-right" for=year>'+str(uniqueYears[-1])+'</label> \n <script> \n $("[data-slider]") \n .each(function () { \n var input = $(this); \n $("<span>") \n .addClass("output") \n .attr("id", "newId") \n .insertAfter($(this)); \n }) \n .bind("slider:ready slider:changed", function (event, data) { \n $(this) \n .nextAll(".output") \n .html(data.value.toFixed(0)); \n }); \n $(document).ready(function()\n{$("body").on("click",":radio",function(evt) {radio(evt.target.layerId);});\n}); \n</script> \n</fieldset>\n</body>\n'
-outFile.write(timesliderclose) #Write end html of timeslider to outFile
+timesliderclose='<label class="align-left" for=year>'+str(markerYears[0])+'</label><label class="align-right" for=year>'+str(markerYears[-1])+'</label> \n <script> \n $("[data-slider]") \n .each(function () { \n var input = $(this); \n $("<span>") \n .addClass("output") \n .attr("id", "newId") \n .insertAfter($(this)); \n }) \n .bind("slider:ready slider:changed", function (event, data) { \n $(this) \n .nextAll(".output") \n .html(data.value.toFixed(0)); \n }); \n $(document).ready(function()\n{$("body").on("click",":radio",function(evt) {radio(evt.target.layerId);});\n}); \n</script> \n</fieldset>\n</body>\n'
+outFile.write(timesliderclose) #Write functions for displaying the value of the timeslider and for obtaining the layer that has been clicked in the layer control window
 
 #BEGIN SCRIPTS
 scripts='<script src="data/exp_AirOrthoAttributeGraph.js"></script> \n <script> \n \n'
@@ -76,7 +76,7 @@ yearlayers=[] #Create an empty array where all the different year layer groups w
 FIPbounds=[] #Create an empty array where all the different FIP bounds will be mentioned
 yfl=[]
 id={}
-for x in xrange(0, len(uniqueYears)): #iterates through each year
+for x in xrange(0, len(markerYears)): #iterates through each year
 	z=1 #numbers each different markers for labeling their variable name in the javascript of outFile
 	markerarray=[] #Create empty array for all markers of the same year
 	layerarray=[] #Create empty array for all layers of the same year
@@ -86,7 +86,7 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
 		year=item[17] #year is in the first column
 		year=year[:4]
 		flightline=item[1] #flightline is in the second column
-		if str(uniqueYears[x])==year: #if the year is equal to the first value in the cell (year) then append the flightline in the column beside it to the flightLine array
+		if str(markerYears[x])==year: #if the year is equal to the first value in the cell (year) then append the flightline in the column beside it to the flightLine array
 			flightLine.append(item[5]) 
 		flightLine=sorted(set(flightLine)) #sort the flightlines for the year
 	for line in content:
@@ -113,7 +113,7 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
 			imgsrc="" #If there is no value in the image column (img="") then don't do anything
 		else:
 			imgsrc='<a href="'+str(imglink)+'" target="_blank"><img src="'+str(img)+'" height="200" width="200"></a> <br>' #If image field is not empty then add the image
-		if str(uniqueYears[x])==year:
+		if str(markerYears[x])==year:
 			yfl.append(flightline)
 	yfl=sorted(set(yfl))
 	for line in content:
@@ -164,41 +164,48 @@ for x in xrange(0, len(uniqueYears)): #iterates through each year
 		else:
 			imgsrc='<a href="'+str(dArchive)+'" target="_blank"><img src="'+str(img)+'" height="200" width="200"></a> <br>' #If image field is not empty then add the image
 		for y in xrange (0, len(yfl)):
-			if flightline==yfl[y] and str(uniqueYears[x])==year:
-				markers='var '+str(ID)+str(uniqueYears[x])+str(cflightline)+str(cphoto)+str(iTitle)+'=L.marker(['+str(latitude)+','+str(longitude)+'], {icon: '+str(markercolours[y])+'Icon, time: "'+str(dateother)+'"}).bindPopup(\''+str(imgsrc)+'<strong>Set Name</strong> '+str(ID)+' '+str(dateother)+' <br><strong>Photo Date</strong> '+str(item[4])+' <br><strong>Flight Line</strong> '+str(flightline)+'<br> <strong>Photo</strong> '+str(iphoto)+'<br> <strong>Scale</strong> '+str(scale)+'<br> '+str(dalink)+'\'); \n'
+			if flightline==yfl[y] and str(markerYears[x])==year:
+				markers='var '+str(ID)+str(markerYears[x])+str(cflightline)+str(cphoto)+str(iTitle)+'=L.marker(['+str(latitude)+','+str(longitude)+'], {icon: '+str(markercolours[y])+'Icon, time: "'+str(dateother)+'"}).bindPopup(\''+str(imgsrc)+'<strong>Set Name</strong> '+str(ID)+' '+str(dateother)+' <br><strong>Photo Date</strong> '+str(item[4])+' <br><strong>Flight Line</strong> '+str(flightline)+'<br> <strong>Photo</strong> '+str(iphoto)+'<br> <strong>Scale</strong> '+str(scale)+'<br> '+str(dalink)+'\'); \n'
 				outFile.write(markers)
-				markerarray.append(str(str(ID)+str(uniqueYears[x]))+str(cflightline)+str(cphoto)+str(iTitle)) #write name of the marker above to the marker array
+				markerarray.append(str(str(ID)+str(markerYears[x]))+str(cflightline)+str(cphoto)+str(iTitle)) #write name of the marker above to the marker array
 			else: pass
-	if uniqueYears[x] in orthoYears:
-		layer = "var Hamilton_"+str(uniqueYears[x])+" = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_"+str(uniqueYears[x])+"/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});\n"
-		outFile.write(layer) #write baseLayers variable in java to the outFile
-		layerarray.append('Hamilton_'+str(uniqueYears[x]))
-	if uniqueYears[x] in FIPYears:
-		layer = "var FIP_"+str(uniqueYears[x])+" = L.tileLayer('http://tiles.mcmaster.ca/FIP_"+str(uniqueYears[x])+"/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});\n"
-		outFile.write(layer) #write baseLayers variable in java to the outFile
-		layerarray.append('FIP_'+str(uniqueYears[x]))
-		bound = "var bound_"+str(uniqueYears[x])+" =L.geoJson(B_"+str(uniqueYears[x])+",{style:{'fillOpacity':0,'opacity':0}});\n"
-		outFile.write(bound)
-		layerarray.append('bound_'+str(uniqueYears[x]))
-		FIPbounds.append('bound_'+str(uniqueYears[x]))
-	if uniqueYears[x] in markerYears:
-		layerarray.append('Markers'+str(uniqueYears[x]))
+	if markerYears[x] in markerYears:
+		layerarray.append('Markers'+str(markerYears[x]))
 	markerarray=sorted(set(markerarray)) #sort the marker array
 	markerarrayNQ=str(markerarray).translate(None,"'") #remove quotations from the marker array so that it can be read in javascript (ex. ['a', 'b'] becomes [a, b]
-	markerGroup='var Markers'+str(uniqueYears[x])+'=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers('+str(markerarrayNQ)+'); \n \n' #group all markers by year in a marker cluster group read by javascript
+	markerGroup='var Markers'+str(markerYears[x])+'=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers('+str(markerarrayNQ)+'); \n \n' #group all markers by year in a marker cluster group read by javascript
 	layerarray=sorted(set(layerarray)) #sort the layer array
 	layerarrayNQ=str(layerarray).translate(None,"'") #remove quotations from the marker array so that it can be read in javascript (ex. ['a', 'b'] becomes [a, b]
-	layerGroup='var Hamilton'+str(uniqueYears[x])+'=L.featureGroup('+str(layerarrayNQ)+'); \n \n' #group all layers by  by year
-	yearlayers.append('Hamilton'+str(uniqueYears[x])) #adding each layerGroup created (from each year) to the massive array of all layers (yearlayers)
-	id[str(uniqueYears[x])]='Hamilton'+str(uniqueYears[x])
+	layerGroup='var Hamilton'+str(markerYears[x])+'=L.featureGroup('+str(layerarrayNQ)+'); \n \n' #group all layers by  by year
+	yearlayers.append('Hamilton'+str(markerYears[x])) #adding each layerGroup created (from each year) to the massive array of all layers (yearlayers)
+	id[str(markerYears[x])]='Hamilton'+str(markerYears[x])
 	outFile.write(markerGroup)
 	outFile.write(layerGroup)
 	yfl = []
+
+orthoarray=[]
+FIParray=[]
+for x in xrange(0, len(uniqueYears)): #iterates through each year
+	if uniqueYears[x] in orthoYears:
+		layer = "var Hamilton_"+str(uniqueYears[x])+" = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_"+str(uniqueYears[x])+"/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,maxZoom: 19});\n"
+		outFile.write(layer) #write Ortho Layer variable in java to the outFile
+		orthoarray.append('\"Hamilton '+str(uniqueYears[x])+'\": Hamilton_'+str(uniqueYears[x]))
+	if uniqueYears[x] in FIPYears:
+		layer = "var FIP_"+str(uniqueYears[x])+" = L.tileLayer('http://tiles.mcmaster.ca/FIP_"+str(uniqueYears[x])+"/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,maxZoom: 19});\n"
+		outFile.write(layer) #write FIP layer variable in java to the outFile
+		bound = "var bound_"+str(uniqueYears[x])+" =L.geoJson(B_"+str(uniqueYears[x])+",{style:{'fillOpacity':0,'opacity':0}});\n" 
+		outFile.write(bound) # write FIP bound variable in java to the outFile 
+		FIP = "var FIP"+str(uniqueYears[x])+" =L.featureGroup([FIP_"+str(uniqueYears[x])+", bound_"+str(uniqueYears[x])+"]);\n"
+		outFile.write(FIP)
+		FIPbounds.append('bound_'+str(uniqueYears[x])) # This set of bounds is to be used for dynamic zooming to the level of the FIPs
+		FIParray.append('\"Hamilton '+str(uniqueYears[x])+'\": FIP'+str(uniqueYears[x]))
 	
 yearlayers=sorted(set(yearlayers))
 FIPbounds=sorted(set(FIPbounds))
+orthoarray=sorted(set(orthoarray))
+FIParray=sorted(set(FIParray))
 #ADD BASEMAPS
-Basemaps="var mbAttr = 'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, ' + \n '<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, ' + \n 'Imagery © <a href=\"http://mapbox.com\">Mapbox</a>' \n var osmattr='Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, ' + \n '<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>' \n var mbUrl2 = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoibmlja2x1eW1lcyIsImEiOiJjaWhzM2dsem4wMGs2dGZraGY1MzN3YmZ2In0.fDtuZ8EU3C5330xaVS4l6A' \n var grayscale =	L.tileLayer(mbUrl2,{id: 'mapbox.light', attribution: mbAttr}), \n OSMbase = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: osmattr}), \n streets =	L.tileLayer(mbUrl2,{id: 'mapbox.high-contrast', attribution: mbAttr}); \n \n"
+Basemaps="var mbAttr = 'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, ' +\n'<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, ' +\n'Imagery © <a href=\"http://mapbox.com\">Mapbox</a>' \n var osmattr='Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, ' +\n'<a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>'\nvar mbUrl2 = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoibmlja2x1eW1lcyIsImEiOiJjaWhzM2dsem4wMGs2dGZraGY1MzN3YmZ2In0.fDtuZ8EU3C5330xaVS4l6A'\nvar grayscale = L.tileLayer(mbUrl2,{id: 'mapbox.light', attribution: mbAttr}),\nOSMbase = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: osmattr}),\nstreets =	L.tileLayer(mbUrl2,{id: 'mapbox.high-contrast', attribution: mbAttr});\n\n"
 outFile.write(Basemaps) #write java for basemaps to outFile
 
 #CREATE MAP
@@ -206,16 +213,18 @@ Lmap='var map=L.map(\'map\', {center:[43.26,-79.89],zoom: 11,layers:[OSMbase]});
 outFile.write(Lmap) #write map to outFile
 FIPlayers=str(FIPbounds).translate(None,"'") #remove single quotations from all years in array FIPlayers
 outFile.write('var FIP=L.featureGroup('+str(FIPlayers)+'); \n')
-outFile.write("map.on('layeradd', function (e) {if (FIP.hasLayer(e.layer)){(map.fitBounds(e.layer.getBounds()))};})\n\n")
+outFile.write("map.on('layeradd', function (e) {if (FIP.hasLayer(e.layer)){(map.fitBounds(e.layer.getBounds()))};})\n\n") #dynamic zooming to the extent of the FIPs
 yearlayerz=str(yearlayers).translate(None,"'") #remove single quotations from all years in array yearlayers
 outFile.write('var Years=L.layerGroup('+str(yearlayerz)+'); \n\n')
-ids=str(id).translate(None,"'")
+ids=str(id).translate(None,"'") #id array to allow for adding layers based on timeslider values
 outFile.write('var id='+str(ids)+'; \n') 
+orthoarrayz=str(orthoarray).translate(None,"'").translate(None,"]").translate(None,"[") #remove single quotations and square brackets from all years in array orthoarray
+FIParrayz=str(FIParray).translate(None,"'").translate(None,"]").translate(None,"[") #remove single quotations and square brackets from all years in array FIParray
 outFile.write('var baseLayers = {"OSM": OSMbase,"Grayscale": grayscale,"Streets": streets}; \n') 
-outFile.write('var overlays = {"Ortho Imagery":{"Hamilton 2014": Hamilton2014,"Hamilton 2010": Hamilton2010,"Hamilton 2007": Hamilton2007,"Hamilton 2005": Hamilton2005,"Hamilton 2002": Hamilton2002,"Hamilton 1999": Hamilton1999},\n"Fire Insurance Plans":{"Hamilton 1898":Hamilton1898}};\n\n')
+outFile.write('var overlays = {"Ortho Imagery":{'+str(orthoarrayz)+'},\n"Fire Insurance Plans":{'+str(FIParrayz)+'}};\n\n') #baselayers and overlays to be used for the basemap layer control
 
 #BASEMAP LAYER CONTROL
-LCGBasemaps='var control = L.control.groupedLayers(baseLayers, overlays,{exclusiveGroups: ["Ortho Imagery","Fire Insurance Plans"],collapsed:false}).addTo(map); \n\n' #add baseLayers to the 'map' variable
+LCGBasemaps='var control = L.control.groupedLayers(baseLayers, overlays,{exclusiveGroups: ["Ortho Imagery","Fire Insurance Plans"],collapsed:false}).addTo(map); \n\n' #add layer control to the 'map' variable
 outFile.write(LCGBasemaps)
 
 #ADD SCALE TO MAP
@@ -228,20 +237,23 @@ outFile.write(opacFunction)
 for x in xrange(0,len(orthoYears)):
 	opacLayer='Hamilton_'+str(orthoYears[x])+'.setOpacity(value);'
 	outFile.write(opacLayer)
+for x in xrange(0,len(FIPYears)):
+	opacLayer='FIP_'+str(FIPYears[x])+'.setOpacity(value);'
+	outFile.write(opacLayer)
 opacEnd='},\n{position: "topright",max: 1,value: 1,step:0.05,size: "200px",collapsed: false,id: "slider"}).addTo(map);\n\n'
-outFile.write(opacEnd)
+outFile.write(opacEnd) #Add opacity slider to the map for the orthophotos and FIPs
 
 ## BASEMAP LAYER CONTROL CHANGE TIMESLIDER VALUE
 sliderval='function radio(layerid)\n{obj = control._layers[layerid];\nfor(var key in id) {\n  if(id[key] === obj.layer) {$("#slide").simpleSlider("setValue", key);};\n};}\n\n'
-outFile.write(sliderval) 
+outFile.write(sliderval) #Change the timeslider value based on overlay clicked in layer control
 
 ## TIMESLIDER SWITCHING BETWEEN YEARS
 yearswitch='function layer(value) \n  {if (map.hasLayer(id[value])==false) {map.eachLayer(function(layer){if (Years.hasLayer(layer)==true) {map.removeLayer(layer)}}); id[value].addTo(map).bringToFront();}};\n\n'  
-outFile.write(yearswitch) 
+outFile.write(yearswitch) #Based on timeslider value, add layers to the map
 
 #TIMESLIDER FUNCTION
 timesliderfunc = '$("body").mousemove(function() { \n layer(Number($("#newId").text())); \n });\n\n' 
-outFile.write(timesliderfunc)
+outFile.write(timesliderfunc) #Get value from timeslider to use in the previous function
 
 #CLOSE SCRIPT
 closescript='</script> \n\n'

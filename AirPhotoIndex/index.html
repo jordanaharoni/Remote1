@@ -27,8 +27,8 @@
  
 <fieldset class="align-center"> 
  <legend>Time Slider</legend> 
-<input type="text" id="slide" data-slider="true" data-slider-values=1898,1919,1927,1934,1943,1950,1951,1952,1953,1954,1955,1956,1958,1959,1960,1961,1962,1963,1964,1965,1966,1967,1969,1970,1972,1978,1980,1985,1988,1990,1994,1997,1999,2000,2002,2005,2007,2010,2014 data-slider-snap="true" value=1919> 
- <label class="align-left" for=year>1898</label><label class="align-right" for=year>2014</label> 
+<input type="text" id="slide" data-slider="true" data-slider-values=1919,1927,1934,1943,1950,1951,1952,1953,1954,1955,1956,1958,1959,1960,1961,1962,1963,1964,1965,1966,1967,1969,1970,1972,1978,1980,1985,1988,1990,1994,1997,1999,2000 data-slider-snap="true" value=1919> 
+ <label class="align-left" for=year>1919</label><label class="align-right" for=year>2000</label> 
  <script> 
  $("[data-slider]") 
  .each(function () { 
@@ -75,12 +75,6 @@ var brownIcon=L.icon({iconUrl: 'https://mdgmcmaster.files.wordpress.com/2015/05/
 var lightblueIcon=L.icon({iconUrl: 'https://mdgmcmaster.files.wordpress.com/2015/05/lightblue.png?w=25', shadowUrl: 'http://en.unesco.org/sites/all/libraries/leaflet/images/marker-shadow.png', iconAnchor: [12.5,41], popupAnchor: [0,-40]});
  
 var lightgreenIcon=L.icon({iconUrl: 'https://mdgmcmaster.files.wordpress.com/2015/05/lightgreen.png?w=25', shadowUrl: 'http://en.unesco.org/sites/all/libraries/leaflet/images/marker-shadow.png', iconAnchor: [12.5,41], popupAnchor: [0,-40]});
- 
-var FIP_1898 = L.tileLayer('http://tiles.mcmaster.ca/FIP_1898/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});
-var bound_1898 =L.geoJson(B_1898,{style:{'fillOpacity':0,'opacity':0}});
-var Markers1898=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers([]); 
- 
-var Hamilton1898=L.featureGroup([FIP_1898, bound_1898]); 
  
 var Hamilton1919AO1327S5819=L.marker([43.259081,-79.872751], {icon: blueIcon, time: "1919"}).bindPopup('<a href="http://digitalarchive.mcmaster.ca/islandora/object/macrepo%3A71642" target="_blank"><img src="http://library.mcmaster.ca/maps/airphotos/thumbnails/AirPhotos_Hamilton_1919_AO1327_S5819.jpg" height="200" width="200"></a> <br><strong>Set Name</strong> Hamilton 1919 <br><strong>Photo Date</strong> [1919] <br><strong>Flight Line</strong> <br> <strong>Photo</strong> AO1327 [S5819]<br> <strong>Scale</strong> [Oblique]<br> <a href="http://digitalarchive.mcmaster.ca/islandora/object/macrepo%3A71642" target="_blank">View/Download the Full-sized Image</a>'); 
 var Hamilton1919AO1326S5818=L.marker([43.258065,-79.874103], {icon: blueIcon, time: "1919"}).bindPopup('<a href="http://digitalarchive.mcmaster.ca/islandora/object/macrepo%3A71643" target="_blank"><img src="http://library.mcmaster.ca/maps/airphotos/thumbnails/AirPhotos_Hamilton_1919_AO1326_S5818.jpg" height="200" width="200"></a> <br><strong>Set Name</strong> Hamilton 1919 <br><strong>Photo Date</strong> [1919] <br><strong>Flight Line</strong> <br> <strong>Photo</strong> AO1326 [S5818]<br> <strong>Scale</strong> [Oblique]<br> <a href="http://digitalarchive.mcmaster.ca/islandora/object/macrepo%3A71643" target="_blank">View/Download the Full-sized Image</a>'); 
@@ -5072,10 +5066,9 @@ var Hamilton1999GTA00456=L.marker([43.213871,-80.027075], {icon: blueIcon, time:
 var Hamilton1999GTA00457=L.marker([43.213559,-80.052395], {icon: blueIcon, time: "1999"}).bindPopup('<a href="" target="_blank"><img src="http://library.mcmaster.ca/maps/airphotos/thumbnails/AirPhotos_Hamilton_1999_GTA004-57.jpg" height="200" width="200"></a> <br><strong>Set Name</strong> Hamilton 1999 <br><strong>Photo Date</strong> 1999 <br><strong>Flight Line</strong> GTA004<br> <strong>Photo</strong> 57<br> <strong>Scale</strong> 1:20,000<br> '); 
 var Hamilton1999GTA00669=L.marker([43.244202,-80.051193], {icon: orangeIcon, time: "1999"}).bindPopup('<a href="" target="_blank"><img src="http://library.mcmaster.ca/maps/airphotos/thumbnails/AirPhotos_Hamilton_1999_GTA006-69.jpg" height="200" width="200"></a> <br><strong>Set Name</strong> Hamilton 1999 <br><strong>Photo Date</strong> 1999 <br><strong>Flight Line</strong> GTA006<br> <strong>Photo</strong> 69<br> <strong>Scale</strong> 1:20,000<br> '); 
 var Hamilton1999GTA00668=L.marker([43.245203,-80.025787], {icon: orangeIcon, time: "1999"}).bindPopup('<a href="" target="_blank"><img src="http://library.mcmaster.ca/maps/airphotos/thumbnails/AirPhotos_Hamilton_1999_GTA006-68.jpg" height="200" width="200"></a> <br><strong>Set Name</strong> Hamilton 1999 <br><strong>Photo Date</strong> 1999 <br><strong>Flight Line</strong> GTA006<br> <strong>Photo</strong> 68<br> <strong>Scale</strong> 1:20,000<br> '); 
-var Hamilton_1999 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_1999/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});
 var Markers1999=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers([Hamilton1999GTA00456, Hamilton1999GTA00457, Hamilton1999GTA00668, Hamilton1999GTA00669]); 
  
-var Hamilton1999=L.featureGroup([Hamilton_1999, Markers1999]); 
+var Hamilton1999=L.featureGroup([Markers1999]); 
  
 var Hamilton200021592=L.marker([43.06243,-79.8585], {icon: blueIcon, time: "2000"}).bindPopup('<a href="" target="_blank"><img src="http://library.mcmaster.ca/maps/airphotos/thumbnails/AirPhotos_Hamilton_2000-21592.jpg" height="200" width="200"></a> <br><strong>Set Name</strong> Hamilton 2000 <br><strong>Photo Date</strong> 2000 <br><strong>Flight Line</strong> <br> <strong>Photo</strong> 21592<br> <strong>Scale</strong> 1:4,000<br> '); 
 var Hamilton200021594=L.marker([43.06249,-79.833], {icon: blueIcon, time: "2000"}).bindPopup('<a href="" target="_blank"><img src="http://library.mcmaster.ca/maps/airphotos/thumbnails/AirPhotos_Hamilton_2000-21594.jpg" height="200" width="200"></a> <br><strong>Set Name</strong> Hamilton 2000 <br><strong>Photo Date</strong> 2000 <br><strong>Flight Line</strong> <br> <strong>Photo</strong> 21594<br> <strong>Scale</strong> 1:4,000<br> '); 
@@ -5245,58 +5238,42 @@ var Markers2000=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers([Ha
  
 var Hamilton2000=L.featureGroup([Markers2000]); 
  
-var Hamilton_2002 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_2002/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});
-var Markers2002=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers([]); 
- 
-var Hamilton2002=L.featureGroup([Hamilton_2002]); 
- 
-var Hamilton_2005 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_2005/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});
-var Markers2005=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers([]); 
- 
-var Hamilton2005=L.featureGroup([Hamilton_2005]); 
- 
-var Hamilton_2007 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_2007/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});
-var Markers2007=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers([]); 
- 
-var Hamilton2007=L.featureGroup([Hamilton_2007]); 
- 
-var Hamilton_2010 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_2010/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});
-var Markers2010=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers([]); 
- 
-var Hamilton2010=L.featureGroup([Hamilton_2010]); 
- 
-var Hamilton_2014 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_2014/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,});
-var Markers2014=L.markerClusterGroup({disableClusteringAtZoom:13}).addLayers([]); 
- 
-var Hamilton2014=L.featureGroup([Hamilton_2014]); 
- 
-var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' + 
- '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' + 
- 'Imagery © <a href="http://mapbox.com">Mapbox</a>' 
- var osmattr='Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' + 
- '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>' 
- var mbUrl2 = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoibmlja2x1eW1lcyIsImEiOiJjaWhzM2dsem4wMGs2dGZraGY1MzN3YmZ2In0.fDtuZ8EU3C5330xaVS4l6A' 
- var grayscale =	L.tileLayer(mbUrl2,{id: 'mapbox.light', attribution: mbAttr}), 
- OSMbase = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: osmattr}), 
- streets =	L.tileLayer(mbUrl2,{id: 'mapbox.high-contrast', attribution: mbAttr}); 
- 
+var FIP_1898 = L.tileLayer('http://tiles.mcmaster.ca/FIP_1898/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,maxZoom: 19});
+var bound_1898 =L.geoJson(B_1898,{style:{'fillOpacity':0,'opacity':0}});
+var FIP1898 =L.featureGroup([FIP_1898, bound_1898]);
+var Hamilton_1999 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_1999/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,maxZoom: 19});
+var Hamilton_2002 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_2002/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,maxZoom: 19});
+var Hamilton_2005 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_2005/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,maxZoom: 19});
+var Hamilton_2007 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_2007/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,maxZoom: 19});
+var Hamilton_2010 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_2010/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,maxZoom: 19});
+var Hamilton_2014 = L.tileLayer('http://tiles.mcmaster.ca/Hamilton_2014/{z}/{x}/{y}.png', {format: 'image/png',tms: true,noWrap: true,maxZoom: 19});
+var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+'Imagery © <a href="http://mapbox.com">Mapbox</a>' 
+ var osmattr='Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+var mbUrl2 = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoibmlja2x1eW1lcyIsImEiOiJjaWhzM2dsem4wMGs2dGZraGY1MzN3YmZ2In0.fDtuZ8EU3C5330xaVS4l6A'
+var grayscale = L.tileLayer(mbUrl2,{id: 'mapbox.light', attribution: mbAttr}),
+OSMbase = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: osmattr}),
+streets =	L.tileLayer(mbUrl2,{id: 'mapbox.high-contrast', attribution: mbAttr});
+
 var map=L.map('map', {center:[43.26,-79.89],zoom: 11,layers:[OSMbase]}); 
 
 var FIP=L.featureGroup([bound_1898]); 
 map.on('layeradd', function (e) {if (FIP.hasLayer(e.layer)){(map.fitBounds(e.layer.getBounds()))};})
 
-var Years=L.layerGroup([Hamilton1898, Hamilton1919, Hamilton1927, Hamilton1934, Hamilton1943, Hamilton1950, Hamilton1951, Hamilton1952, Hamilton1953, Hamilton1954, Hamilton1955, Hamilton1956, Hamilton1958, Hamilton1959, Hamilton1960, Hamilton1961, Hamilton1962, Hamilton1963, Hamilton1964, Hamilton1965, Hamilton1966, Hamilton1967, Hamilton1969, Hamilton1970, Hamilton1972, Hamilton1978, Hamilton1980, Hamilton1985, Hamilton1988, Hamilton1990, Hamilton1994, Hamilton1997, Hamilton1999, Hamilton2000, Hamilton2002, Hamilton2005, Hamilton2007, Hamilton2010, Hamilton2014]); 
+var Years=L.layerGroup([Hamilton1919, Hamilton1927, Hamilton1934, Hamilton1943, Hamilton1950, Hamilton1951, Hamilton1952, Hamilton1953, Hamilton1954, Hamilton1955, Hamilton1956, Hamilton1958, Hamilton1959, Hamilton1960, Hamilton1961, Hamilton1962, Hamilton1963, Hamilton1964, Hamilton1965, Hamilton1966, Hamilton1967, Hamilton1969, Hamilton1970, Hamilton1972, Hamilton1978, Hamilton1980, Hamilton1985, Hamilton1988, Hamilton1990, Hamilton1994, Hamilton1997, Hamilton1999, Hamilton2000]); 
 
-var id={1934: Hamilton1934, 1898: Hamilton1898, 1988: Hamilton1988, 1927: Hamilton1927, 1985: Hamilton1985, 1969: Hamilton1969, 1980: Hamilton1980, 1964: Hamilton1964, 1965: Hamilton1965, 1966: Hamilton1966, 1967: Hamilton1967, 1960: Hamilton1960, 1961: Hamilton1961, 1962: Hamilton1962, 1963: Hamilton1963, 2014: Hamilton2014, 2010: Hamilton2010, 1990: Hamilton1990, 2005: Hamilton2005, 1955: Hamilton1955, 1954: Hamilton1954, 1956: Hamilton1956, 1951: Hamilton1951, 1950: Hamilton1950, 1953: Hamilton1953, 1952: Hamilton1952, 1959: Hamilton1959, 1958: Hamilton1958, 1919: Hamilton1919, 1994: Hamilton1994, 1997: Hamilton1997, 1978: Hamilton1978, 1999: Hamilton1999, 1972: Hamilton1972, 1970: Hamilton1970, 2002: Hamilton2002, 2000: Hamilton2000, 2007: Hamilton2007, 1943: Hamilton1943}; 
+var id={1934: Hamilton1934, 1988: Hamilton1988, 1927: Hamilton1927, 1985: Hamilton1985, 1969: Hamilton1969, 1980: Hamilton1980, 1964: Hamilton1964, 1965: Hamilton1965, 1966: Hamilton1966, 1967: Hamilton1967, 1960: Hamilton1960, 1961: Hamilton1961, 1962: Hamilton1962, 1963: Hamilton1963, 1990: Hamilton1990, 1955: Hamilton1955, 1954: Hamilton1954, 1956: Hamilton1956, 1951: Hamilton1951, 1950: Hamilton1950, 1953: Hamilton1953, 1952: Hamilton1952, 1959: Hamilton1959, 1958: Hamilton1958, 1919: Hamilton1919, 1994: Hamilton1994, 1997: Hamilton1997, 1978: Hamilton1978, 1999: Hamilton1999, 1972: Hamilton1972, 1970: Hamilton1970, 2000: Hamilton2000, 1943: Hamilton1943}; 
 var baseLayers = {"OSM": OSMbase,"Grayscale": grayscale,"Streets": streets}; 
-var overlays = {"Ortho Imagery":{"Hamilton 2014": Hamilton2014,"Hamilton 2010": Hamilton2010,"Hamilton 2007": Hamilton2007,"Hamilton 2005": Hamilton2005,"Hamilton 2002": Hamilton2002,"Hamilton 1999": Hamilton1999},
-"Fire Insurance Plans":{"Hamilton 1898":Hamilton1898}};
+var overlays = {"Ortho Imagery":{"Hamilton 1999": Hamilton_1999, "Hamilton 2002": Hamilton_2002, "Hamilton 2005": Hamilton_2005, "Hamilton 2007": Hamilton_2007, "Hamilton 2010": Hamilton_2010, "Hamilton 2014": Hamilton_2014},
+"Fire Insurance Plans":{"Hamilton 1898": FIP1898}};
 
 var control = L.control.groupedLayers(baseLayers, overlays,{exclusiveGroups: ["Ortho Imagery","Fire Insurance Plans"],collapsed:false}).addTo(map); 
 
 L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map); 
 
-slider = L.control.slider(function(value) {Hamilton_1999.setOpacity(value);Hamilton_2002.setOpacity(value);Hamilton_2005.setOpacity(value);Hamilton_2007.setOpacity(value);Hamilton_2010.setOpacity(value);Hamilton_2014.setOpacity(value);},
+slider = L.control.slider(function(value) {Hamilton_1999.setOpacity(value);Hamilton_2002.setOpacity(value);Hamilton_2005.setOpacity(value);Hamilton_2007.setOpacity(value);Hamilton_2010.setOpacity(value);Hamilton_2014.setOpacity(value);FIP_1898.setOpacity(value);},
 {position: "topright",max: 1,value: 1,step:0.05,size: "200px",collapsed: false,id: "slider"}).addTo(map);
 
 function radio(layerid)
