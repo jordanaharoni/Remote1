@@ -1,0 +1,6 @@
+How to work with remote repositories and push/pull to/from GitHub.
+1. Add the remote repository to git with the "remote add" command, using the URL of the remote
+2. Pull down from the remote repository
+3. Change any files you want/need to change
+4. Add them to the staging area and commit them
+5. After committing, push up to GitHub
